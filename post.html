@@ -5,16 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>HDIPERS.LOG | Loading...</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;700;900&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
+    
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+    
     <script type="module">
         import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
         mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose' });
-        window.runMermaid = async () => { await mermaid.run({ querySelector: '.mermaid' }); };
+        window.runMermaid = async () => { 
+            // 延迟执行，确保 DOM 已经渲染
+            setTimeout(async () => {
+                await mermaid.run({ querySelector: '.mermaid' });
+            }, 200);
+        };
     </script>
+    
     <style>
         :root{--bg:#0a0a0a; --text:#e5e5e5; --accent:#facc15;}
         body { background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; overflow-x: hidden;}
@@ -42,17 +52,21 @@
     </style>
 </head>
 <body class="antialiased selection:bg-yellow-500 selection:text-black">
+
 <nav class="fixed top-0 w-full p-6 flex justify-between items-center z-50 backdrop-blur-md bg-black/80 border-b border-white/10">
     <a href="index.html" class="font-bold tracking-tighter text-xl font-mono hover:text-yellow-400 transition">HDIPERS<span class="text-yellow-500">.LOG</span></a>
     <button id="langToggle" class="text-xs font-mono border border-white/20 px-3 py-1 rounded hover:bg-white/10 transition uppercase">CN / EN</button>
 </nav>
+
 <main class="max-w-4xl mx-auto px-6 py-32 min-h-screen">
     <header class="mb-16 border-b border-neutral-800 pb-8">
         <h1 id="post-title" class="text-3xl md:text-5xl font-black mb-6 leading-tight text-white tracking-tight">Loading...</h1>
         <div class="flex flex-wrap gap-4 text-xs font-mono text-neutral-500 uppercase tracking-widest">
-            <span id="post-date">...</span><span id="post-tags"></span>
+            <span id="post-date">...</span>
+            <span id="post-tags"></span>
         </div>
     </header>
+
     <article id="post-body" class="prose">
         <div class="flex flex-col items-center justify-center py-20 opacity-50 space-y-4">
             <div class="w-8 h-8 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
@@ -60,30 +74,53 @@
         </div>
     </article>
 </main>
-<footer class="w-full text-center opacity-30 text-xs font-mono uppercase tracking-widest pb-8">22abad @ Ireland // END OF LOG</footer>
+
+<footer class="w-full text-center opacity-30 text-xs font-mono uppercase tracking-widest pb-8">
+    22abad @ Ireland // END OF LOG
+</footer>
 
 <script>
-    const GITHUB_USERNAME = '22abad'; const GITHUB_REPO = 'hdipersNotes'; const POSTS_FOLDER = 'posts';
+    const GITHUB_USERNAME = '22abad'; 
+    const GITHUB_REPO = 'hdipersNotes';
+    const POSTS_FOLDER = 'posts';
+
     const toggleBtn = document.getElementById('langToggle');
     let isEnglish = true;
+
     function updateLang() {
         document.querySelectorAll('.content-en').forEach(el => el.classList.toggle('hidden', !isEnglish));
         document.querySelectorAll('.content-zh').forEach(el => el.classList.toggle('hidden', isEnglish));
         toggleBtn.textContent = isEnglish ? 'SWITCH TO 中文' : 'SWITCH TO ENGLISH';
     }
     toggleBtn.addEventListener('click', ()=>{ isEnglish = !isEnglish; updateLang(); });
+
     function getQueryParam(name) { return new URLSearchParams(window.location.search).get(name); }
+
     function parseFrontMatter(raw){
-        raw = raw.trim(); const result = {meta:{}, body: raw};
+        raw = raw.trim();
+        const result = {meta:{}, body: raw};
         const match = raw.match(/^-{3,}\s*([\s\S]+?)\s*-{3,}\s*([\s\S]*)$/);
-        if(!match) { console.warn("FrontMatter Not Found."); return result; }
-        const frontMatter = match[1]; result.body = match[2];
+        
+        if(!match) {
+            console.warn("FrontMatter Not Found.");
+            return result;
+        }
+        
+        const frontMatter = match[1];
+        result.body = match[2];
+
         const lines = frontMatter.split(/\r?\n/);
         lines.forEach(line => {
-            const colonIdx = line.indexOf(':'); if (colonIdx === -1) return;
-            const key = line.slice(0, colonIdx).trim(); let val = line.slice(colonIdx + 1).trim();
+            const colonIdx = line.indexOf(':');
+            if (colonIdx === -1) return;
+            const key = line.slice(0, colonIdx).trim();
+            let val = line.slice(colonIdx + 1).trim();
             if (/^['"].*['"]$/.test(val)) val = val.slice(1, -1);
-            if (key === 'tags' || key === 'categories') { result.meta[key] = val.split(',').map(s => s.trim()); } else { result.meta[key] = val; }
+            if (key === 'tags' || key === 'categories') {
+                result.meta[key] = val.split(',').map(s => s.trim());
+            } else {
+                result.meta[key] = val;
+            }
         });
         return result;
     }
@@ -91,63 +128,75 @@
     async function loadPost(){
         const filename = getQueryParam('id');
         if(!filename) { window.location.href = 'index.html'; return; }
+        
         try {
+            // Raw 模式
             const timestamp = new Date().getTime();
             const url = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/main/${POSTS_FOLDER}/${filename}.md?t=${timestamp}`;
-            console.log("Fetching Raw:", url);
+            console.log("Fetching:", url);
+
             const res = await fetch(url);
             if(!res.ok) {
                 if(res.status === 404) throw new Error("404 Not Found (Check Repo Public/Name)");
                 throw new Error(`Error: ${res.status}`);
             }
+            
             const rawText = await res.text();
             const data = parseFrontMatter(rawText);
+
             document.title = (data.meta.title || 'Log') + ' | HDIPERS';
             document.getElementById('post-title').innerHTML = `
                 <span class="content-en block">${data.meta.title_en || data.meta.title || 'Untitled'}</span>
                 <span class="content-zh hidden font-cn block mt-2 text-2xl md:text-4xl opacity-90">${data.meta.title_zh || ''}</span>
             `;
             document.getElementById('post-date').textContent = data.meta.date || '';
+
             if(data.meta.tags) {
                 const tagContainer = document.getElementById('post-tags');
                 const tagArray = Array.isArray(data.meta.tags) ? data.meta.tags : (data.meta.tags ? [data.meta.tags] : []);
                 tagContainer.innerHTML = tagArray.map(t => `<span class="border border-neutral-700 px-1 rounded">#${t}</span>`).join(' ');
             }
 
-            const renderer = {
-                image(href, title, text) {
-                    // 🔥 终极修复：强制转换 String 并判空 🔥
-                    const safeHref = String(href || '');
-                    if (!safeHref) return text || '';
-                    if (!safeHref.startsWith('http') && !safeHref.startsWith('//')) {
-                        const rawUrl = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/main/${safeHref}`;
-                        return `<img src="${rawUrl}" alt="${text}" title="${title || ''}" />`;
-                    }
-                    return `<img src="${safeHref}" alt="${text}" title="${title || ''}" />`;
-                },
-                link(href, title, text) {
-                    const safeHref = String(href || '');
-                    if (!safeHref) return text || '';
-                    return `<a href="${safeHref}" title="${title || ''}">${text}</a>`;
-                },
-                code(code, infostring) {
-                    const lang = (infostring || '').match(/\S*/)[0];
-                    if (lang === 'mermaid') { return `<div class="mermaid">${code}</div>`; }
-                    const validLang = (window.Prism && Prism.languages[lang]) ? lang : 'plaintext';
-                    return `<pre><code class="language-${validLang}">${code}</code></pre>`;
+            // 🔥 自定义渲染器 (适配 Marked 4.x) 🔥
+            const renderer = new marked.Renderer();
+            
+            renderer.image = function(href, title, text) {
+                if (!href) return text;
+                const safeHref = String(href); // 强转字符串，防止对象
+                if (!safeHref.startsWith('http') && !safeHref.startsWith('//')) {
+                    const rawUrl = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/main/${safeHref}`;
+                    return `<img src="${rawUrl}" alt="${text}" title="${title || ''}" />`;
                 }
+                return `<img src="${safeHref}" alt="${text}" title="${title || ''}" />`;
             };
 
-            marked.use({ renderer });
-            const rawHTML = marked.parse(data.body);
+            renderer.link = function(href, title, text) {
+                if (!href) return text;
+                return `<a href="${href}" title="${title || ''}">${text}</a>`;
+            };
+
+            renderer.code = function(code, language) {
+                if (language === 'mermaid') {
+                    return `<div class="mermaid">${code}</div>`;
+                }
+                const validLang = (window.Prism && Prism.languages[language]) ? language : 'plaintext';
+                return `<pre><code class="language-${validLang}">${code}</code></pre>`;
+            };
+
+            // 使用 Renderer 解析
+            const rawHTML = marked(data.body, { renderer: renderer });
+            
             let processedHTML = rawHTML
                 .replace(/\[EN\]([\s\S]*?)\[END\]/g, '<div class="content-en">$1</div>')
                 .replace(/\[ZH\]([\s\S]*?)\[END\]/g, '<div class="content-zh hidden font-cn">$1</div>');
-            
+
             document.getElementById('post-body').innerHTML = processedHTML;
+            
             updateLang();
             if(window.Prism) Prism.highlightAll();
-            setTimeout(() => { if(window.runMermaid) window.runMermaid(); }, 100);
+            
+            // 触发 Mermaid
+            if(window.runMermaid) window.runMermaid();
 
         } catch(e) {
             console.error(e);
