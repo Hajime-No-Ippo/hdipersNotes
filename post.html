@@ -18,7 +18,6 @@
         import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
         mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose' });
         window.runMermaid = async () => { 
-            // 延迟执行，确保 DOM 已经渲染
             setTimeout(async () => {
                 await mermaid.run({ querySelector: '.mermaid' });
             }, 200);
@@ -130,7 +129,6 @@
         if(!filename) { window.location.href = 'index.html'; return; }
         
         try {
-            // Raw 模式
             const timestamp = new Date().getTime();
             const url = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/main/${POSTS_FOLDER}/${filename}.md?t=${timestamp}`;
             console.log("Fetching:", url);
@@ -157,34 +155,36 @@
                 tagContainer.innerHTML = tagArray.map(t => `<span class="border border-neutral-700 px-1 rounded">#${t}</span>`).join(' ');
             }
 
-            // 🔥 自定义渲染器 (适配 Marked 4.x) 🔥
-            const renderer = new marked.Renderer();
-            
-            renderer.image = function(href, title, text) {
-                if (!href) return text;
-                const safeHref = String(href); // 强转字符串，防止对象
-                if (!safeHref.startsWith('http') && !safeHref.startsWith('//')) {
-                    const rawUrl = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/main/${safeHref}`;
-                    return `<img src="${rawUrl}" alt="${text}" title="${title || ''}" />`;
+            // --- 🔥 Renderer 配置 🔥 ---
+            const renderer = {
+                image(href, title, text) {
+                    if (!href) return text;
+                    const safeHref = String(href);
+                    if (!safeHref.startsWith('http') && !safeHref.startsWith('//')) {
+                        const rawUrl = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/main/${safeHref}`;
+                        return `<img src="${rawUrl}" alt="${text}" title="${title || ''}" />`;
+                    }
+                    return `<img src="${safeHref}" alt="${text}" title="${title || ''}" />`;
+                },
+                link(href, title, text) {
+                    if (!href) return text;
+                    return `<a href="${href}" title="${title || ''}">${text}</a>`;
+                },
+                code(code, infostring) {
+                    const lang = (infostring || '').match(/\S*/)[0];
+                    if (lang === 'mermaid') {
+                        return `<div class="mermaid">${code}</div>`;
+                    }
+                    const validLang = (window.Prism && Prism.languages[lang]) ? lang : 'plaintext';
+                    return `<pre><code class="language-${validLang}">${code}</code></pre>`;
                 }
-                return `<img src="${safeHref}" alt="${text}" title="${title || ''}" />`;
             };
 
-            renderer.link = function(href, title, text) {
-                if (!href) return text;
-                return `<a href="${href}" title="${title || ''}">${text}</a>`;
-            };
+            // 1. 注册渲染器
+            marked.use({ renderer });
 
-            renderer.code = function(code, language) {
-                if (language === 'mermaid') {
-                    return `<div class="mermaid">${code}</div>`;
-                }
-                const validLang = (window.Prism && Prism.languages[language]) ? language : 'plaintext';
-                return `<pre><code class="language-${validLang}">${code}</code></pre>`;
-            };
-
-            // 使用 Renderer 解析
-            const rawHTML = marked(data.body, { renderer: renderer });
+            // 2. 🔥 核心修复：改为 marked.parse() 调用 🔥
+            const rawHTML = marked.parse(data.body);
             
             let processedHTML = rawHTML
                 .replace(/\[EN\]([\s\S]*?)\[END\]/g, '<div class="content-en">$1</div>')
@@ -194,8 +194,6 @@
             
             updateLang();
             if(window.Prism) Prism.highlightAll();
-            
-            // 触发 Mermaid
             if(window.runMermaid) window.runMermaid();
 
         } catch(e) {
