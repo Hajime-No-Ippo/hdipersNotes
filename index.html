@@ -3,313 +3,223 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HDIPERS.LOG | 22abad</title>
+    <title>HDIPERS.LOG | Loading...</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;700;900&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+    
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose' });
+        // 挂载到 window 以便后续调用
+        window.runMermaid = async () => { 
+            await mermaid.run({ querySelector: '.mermaid' }); 
+        };
+    </script>
+    
     <style>
-        :root{--bg:#0a0a0a; --muted:#737373; --accent:#facc15;}
-        body { background-color: var(--bg); color: #e5e5e5; overflow-x: hidden; font-family: 'Inter', sans-serif; }
+        :root{--bg:#0a0a0a; --text:#e5e5e5; --accent:#facc15;}
+        body { background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; overflow-x: hidden;}
         .font-mono { font-family: 'JetBrains Mono', monospace; }
-        .font-serif-cn { font-family: 'Noto Serif SC', serif; }
-        #gridCanvas { position: fixed; inset:0; width:100%; height:100%; z-index:-1; opacity:0.15; pointer-events: none;}
-        .fade-in { animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
-        @keyframes fadeIn { from{opacity:0; transform:translateY(20px) scale(0.98)} to{opacity:1; transform:none} }
-        a.post { text-decoration: none; }
-        .tag-pill { 
-            font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; 
-            border: 1px solid #333; color: #666; transition: all 0.2s; 
-        }
-        .tag-pill:hover { border-color: var(--accent); color: var(--accent); background: rgba(250, 204, 21, 0.1); }
-        .thumb-box {
-            width: 80px; height: 80px; flex-shrink: 0; border-radius: 4px; 
-            overflow: hidden; background: #171717; margin-left: 1rem; border: 1px solid #333;
-            display: none; 
-        }
-        .thumb-box.has-img { display: block; }
-        .thumb-box img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; transition: opacity 0.3s; filter: grayscale(100%); }
-        .post:hover .thumb-box img { opacity: 1; filter: grayscale(0%); }
+        .font-cn { font-family: 'Noto Serif SC', serif; }
+        .prose { max-width: none; }
+        .prose h1, .prose h2, .prose h3 { color: #fff; margin-top: 2.5em; margin-bottom: 0.8em; font-weight: 800; line-height: 1.2; }
+        .prose h1 { font-size: 2.5rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.3em; display: inline-block; }
+        .prose h2 { font-size: 1.8rem; color: var(--accent); }
+        .prose h3 { font-size: 1.4rem; color: #fbbf24; }
+        .prose p { margin-bottom: 1.5em; line-height: 1.8; opacity: 0.9; font-size: 1.05rem; }
+        .prose ul, .prose ol { margin-bottom: 1.5em; padding-left: 1.5em; }
+        .prose ul { list-style-type: disc; }
+        .prose ol { list-style-type: decimal; }
+        .prose li { margin-bottom: 0.5em; }
+        .prose pre { background: #171717 !important; border: 1px solid #333; border-radius: 6px; padding: 1.2em; overflow-x: auto; font-family: 'JetBrains Mono', monospace; margin: 1.5em 0; }
+        .prose code { font-family: 'JetBrains Mono', monospace; background: rgba(255,255,255,0.1); padding: 0.2em 0.4em; border-radius: 4px; font-size: 0.9em; color: var(--accent); }
+        .prose pre code { background: transparent; padding: 0; color: inherit; }
+        .prose blockquote { border-left: 4px solid var(--accent); background: rgba(250, 204, 21, 0.05); padding: 1em 1.5em; color: #d4d4d4; font-style: italic; margin: 2em 0; }
+        .prose img { border-radius: 8px; border: 1px solid #333; margin: 2rem auto; max-width: 100%; display: block; }
+        
+        /* Mermaid 样式 */
+        .mermaid { background: #171717; padding: 20px; border-radius: 8px; text-align: center; margin: 2rem 0; border: 1px solid #333; display: flex; justify-content: center;}
+        
+        .prose table { width: 100%; border-collapse: collapse; margin: 2em 0; }
+        .prose th, .prose td { border: 1px solid #333; padding: 0.75em; text-align: left; }
+        .prose th { background: #262626; color: var(--accent); }
     </style>
 </head>
 <body class="antialiased selection:bg-yellow-500 selection:text-black">
 
-<canvas id="gridCanvas"></canvas>
-
-<nav class="fixed top-0 w-full p-6 flex justify-between items-center z-50 backdrop-blur-md bg-black/60 border-b border-white/10">
-    <div class="text-xl font-black tracking-tighter font-mono hover:text-yellow-400 transition cursor-pointer" onclick="window.location.reload()">
-        HDIPERS<span class="text-yellow-500">.LOG</span>
-    </div>
-    <button id="langToggle" class="px-3 py-1 border border-white/20 rounded text-xs hover:bg-white/10 hover:border-white/50 transition uppercase tracking-wide font-mono">CN / EN</button>
+<nav class="fixed top-0 w-full p-6 flex justify-between items-center z-50 backdrop-blur-md bg-black/80 border-b border-white/10">
+    <a href="index.html" class="font-bold tracking-tighter text-xl font-mono hover:text-yellow-400 transition">HDIPERS<span class="text-yellow-500">.LOG</span></a>
+    <button id="langToggle" class="text-xs font-mono border border-white/20 px-3 py-1 rounded hover:bg-white/10 transition uppercase">CN / EN</button>
 </nav>
 
-<main class="min-h-screen w-full max-w-3xl mx-auto px-4 sm:px-6 pt-32 pb-20 relative z-10">
-    <article class="fade-in mb-20">
-        <h1 class="text-5xl sm:text-7xl font-black mb-6 tracking-tight leading-none text-white">
-            <span class="content-en">HDip CS<br><span class="text-yellow-500">SURVIVAL.</span></span>
-            <span class="content-zh hidden font-serif-cn">HDip CS<br><span class="text-yellow-500">生存指南。</span></span>
-        </h1>
-        
-        <div class="space-y-4 text-lg sm:text-xl text-neutral-400 font-normal max-w-xl leading-relaxed border-l-2 border-yellow-500/50 pl-6">
-            <p class="content-en">
-                Engineering logs for Higher Diploma in Software Development.
-                <span class="block text-sm font-mono mt-2 text-neutral-500">// Java, Algorithms, Web & System Design.</span>
-            </p>
-            <p class="content-zh hidden font-serif-cn">
-                软件开发高等文凭工程日志。
-                <span class="block text-sm font-mono mt-2 text-neutral-500">// 涵盖 Java, 算法, Web 与系统设计。</span>
-            </p>
+<main class="max-w-4xl mx-auto px-6 py-32 min-h-screen">
+    <header class="mb-16 border-b border-neutral-800 pb-8">
+        <h1 id="post-title" class="text-3xl md:text-5xl font-black mb-6 leading-tight text-white tracking-tight">Loading...</h1>
+        <div class="flex flex-wrap gap-4 text-xs font-mono text-neutral-500 uppercase tracking-widest">
+            <span id="post-date">...</span>
+            <span id="post-tags"></span>
+        </div>
+    </header>
+
+    <article id="post-body" class="prose">
+        <div class="flex flex-col items-center justify-center py-20 opacity-50 space-y-4">
+            <div class="w-8 h-8 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
+            <p class="font-mono text-sm">ACCESSING RAW DATA...</p>
         </div>
     </article>
-
-    <section id="blog-section" class="fade-in border-t border-neutral-800 pt-10">
-        <div class="flex justify-between items-end mb-8 px-1">
-            <h2 class="text-xs font-mono font-bold uppercase tracking-widest text-yellow-500">
-                <span class="content-en">:: RUNTIME LOGS</span>
-                <span class="content-zh hidden">:: 运行日志</span>
-            </h2>
-            <div id="filter-indicator" class="hidden text-xs flex items-center gap-2 font-mono">
-                <span class="opacity-50">FILTER:</span>
-                <span id="active-filter-name" class="text-yellow-400 font-bold border-b border-yellow-400"></span>
-                <button onclick="clearFilter()" class="hover:text-red-400 ml-2 font-bold px-2" title="Clear Filter">[x]</button>
-            </div>
-        </div>
-
-        <div id="post-list" class="space-y-4">
-            <div class="text-center opacity-30 text-sm font-mono py-10">
-                <span class="content-en">Initializing sequence...</span>
-                <span class="content-zh hidden">正在初始化序列...</span>
-            </div>
-        </div>
-    </section>
 </main>
 
-<footer class="w-full text-center opacity-30 text-xs font-mono uppercase tracking-widest pb-8 relative z-10">
-    22abad @ Ireland // SYSTEM ONLINE
+<footer class="w-full text-center opacity-30 text-xs font-mono uppercase tracking-widest pb-8">
+    22abad @ Ireland // END OF LOG
 </footer>
 
 <script>
-let ALL_POSTS = []; 
-const GITHUB_USERNAME = '22abad';
-const GITHUB_REPO = 'hdipersNotes'; 
-const POSTS_FOLDER = 'posts';
+    // ⚡️ CONFIGURATION ⚡️
+    const GITHUB_USERNAME = '22abad'; 
+    const GITHUB_REPO = 'hdipersNotes';
+    const POSTS_FOLDER = 'posts';
 
-const toggleBtn = document.getElementById('langToggle');
-let isEnglish = true;
-function updateLang() {
-    document.querySelectorAll('.content-en').forEach(el => el.classList.toggle('hidden', !isEnglish));
-    document.querySelectorAll('.content-zh').forEach(el => el.classList.toggle('hidden', isEnglish));
-    toggleBtn.textContent = isEnglish ? 'SWITCH TO 中文' : 'SWITCH TO ENGLISH';
-}
-toggleBtn.addEventListener('click', ()=>{ isEnglish = !isEnglish; updateLang(); });
+    const toggleBtn = document.getElementById('langToggle');
+    let isEnglish = true;
 
-function parseFrontMatter(raw){
-    raw = raw.trim();
-    const result = {meta:{}, body: raw};
-    const match = raw.match(/^-{3,}\s*([\s\S]+?)\s*-{3,}\s*([\s\S]*)$/);
-    if(!match) return result;
-    const head = match[1];
-    const regex = /^([a-zA-Z0-9_-]+):\s*(.+)$/gm;
-    let r;
-    while ((r = regex.exec(head)) !== null) {
-        const key = r[1].trim();
-        let val = r[2].trim();
-        if (/^['"].*['"]$/.test(val)) val = val.slice(1, -1);
-        if (key === 'tags' || key === 'categories') {
-            result.meta[key] = val.split(',').map(s => s.trim());
-        } else {
-            result.meta[key] = val;
+    function updateLang() {
+        document.querySelectorAll('.content-en').forEach(el => el.classList.toggle('hidden', !isEnglish));
+        document.querySelectorAll('.content-zh').forEach(el => el.classList.toggle('hidden', isEnglish));
+        toggleBtn.textContent = isEnglish ? 'SWITCH TO 中文' : 'SWITCH TO ENGLISH';
+    }
+    toggleBtn.addEventListener('click', ()=>{ isEnglish = !isEnglish; updateLang(); });
+
+    function getQueryParam(name) { return new URLSearchParams(window.location.search).get(name); }
+
+    function parseFrontMatter(raw){
+        raw = raw.trim();
+        const result = {meta:{}, body: raw};
+        const match = raw.match(/^-{3,}\s*([\s\S]+?)\s*-{3,}\s*([\s\S]*)$/);
+        
+        if(!match) {
+            console.warn("FrontMatter Not Found.");
+            return result;
+        }
+        
+        const frontMatter = match[1];
+        result.body = match[2];
+
+        const lines = frontMatter.split(/\r?\n/);
+        lines.forEach(line => {
+            const colonIdx = line.indexOf(':');
+            if (colonIdx === -1) return;
+            const key = line.slice(0, colonIdx).trim();
+            let val = line.slice(colonIdx + 1).trim();
+            if (/^['"].*['"]$/.test(val)) val = val.slice(1, -1);
+            if (key === 'tags' || key === 'categories') {
+                result.meta[key] = val.split(',').map(s => s.trim());
+            } else {
+                result.meta[key] = val;
+            }
+        });
+        return result;
+    }
+
+    async function loadPost(){
+        const filename = getQueryParam('id');
+        if(!filename) { window.location.href = 'index.html'; return; }
+        
+        try {
+            // 使用 Raw + Timestamp 绕过 API 限制
+            const timestamp = new Date().getTime();
+            const url = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/main/${POSTS_FOLDER}/${filename}.md?t=${timestamp}`;
+            
+            console.log("Fetching Raw:", url);
+
+            const res = await fetch(url);
+            
+            if(!res.ok) {
+                if(res.status === 404) throw new Error("404 Not Found (Check Repo Public/Name)");
+                throw new Error(`Error: ${res.status}`);
+            }
+            
+            const rawText = await res.text();
+            const data = parseFrontMatter(rawText);
+
+            document.title = (data.meta.title || 'Log') + ' | HDIPERS';
+            document.getElementById('post-title').innerHTML = `
+                <span class="content-en block">${data.meta.title_en || data.meta.title || 'Untitled'}</span>
+                <span class="content-zh hidden font-cn block mt-2 text-2xl md:text-4xl opacity-90">${data.meta.title_zh || ''}</span>
+            `;
+            document.getElementById('post-date').textContent = data.meta.date || '';
+
+            if(data.meta.tags) {
+                const tagContainer = document.getElementById('post-tags');
+                const tagArray = Array.isArray(data.meta.tags) ? data.meta.tags : (data.meta.tags ? [data.meta.tags] : []);
+                tagContainer.innerHTML = tagArray.map(t => `<span class="border border-neutral-700 px-1 rounded">#${t}</span>`).join(' ');
+            }
+
+            // 🔥 核心修复：使用 marked.use() 替代 parse options 🔥
+            // 这种方式兼容性最强，彻底解决 [object Object] 问题
+            const renderer = {
+                image(href, title, text) {
+                    if (!href) return text;
+                    if (!href.startsWith('http') && !href.startsWith('//')) {
+                        const rawUrl = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/main/${href}`;
+                        return `<img src="${rawUrl}" alt="${text}" title="${title || ''}" />`;
+                    }
+                    return `<img src="${href}" alt="${text}" title="${title || ''}" />`;
+                },
+                link(href, title, text) {
+                    if (!href) return text;
+                    return `<a href="${href}" title="${title || ''}">${text}</a>`;
+                },
+                code(code, infostring) {
+                    // 确保 infostring 存在，防止崩溃
+                    const lang = (infostring || '').match(/\S*/)[0];
+                    
+                    if (lang === 'mermaid') {
+                        return `<div class="mermaid">${code}</div>`;
+                    }
+                    
+                    // Prism 高亮处理
+                    const validLang = (window.Prism && Prism.languages[lang]) ? lang : 'plaintext';
+                    return `<pre><code class="language-${validLang}">${code}</code></pre>`;
+                }
+            };
+
+            // 使用 use() 挂载渲染器
+            marked.use({ renderer });
+
+            // 解析 Markdown
+            const rawHTML = marked.parse(data.body);
+            
+            let processedHTML = rawHTML
+                .replace(/\[EN\]([\s\S]*?)\[END\]/g, '<div class="content-en">$1</div>')
+                .replace(/\[ZH\]([\s\S]*?)\[END\]/g, '<div class="content-zh hidden font-cn">$1</div>');
+
+            document.getElementById('post-body').innerHTML = processedHTML;
+            
+            updateLang();
+            
+            // 触发高亮和图表渲染
+            if(window.Prism) Prism.highlightAll();
+            // 延迟一点点执行 Mermaid，确保 DOM 已经插入
+            setTimeout(() => {
+                if(window.runMermaid) window.runMermaid();
+            }, 100);
+
+        } catch(e) {
+            console.error(e);
+            document.getElementById('post-body').innerHTML = `
+                <div class="border border-red-900 bg-red-900/20 p-8 rounded text-center">
+                    <h3 class="text-red-500 font-bold text-xl mb-2">SYSTEM ERROR</h3>
+                    <p class="font-mono text-sm text-red-300 mb-4">${e.message}</p>
+                    <a href="index.html" class="inline-block mt-6 border border-neutral-600 px-4 py-2 rounded hover:bg-neutral-800 transition text-sm">RETURN TO INDEX</a>
+                </div>`;
         }
     }
-    result.body = match[2]; 
-    return result;
-}
-
-function extractFirstImage(markdown) {
-    const imgRegex = /!\[.*?\]\((.*?)\)/;
-    const match = markdown.match(imgRegex);
-    return match ? match[1] : null;
-}
-
-window.filterPosts = function(tag) {
-    const filtered = ALL_POSTS.filter(p => {
-        const cats = Array.isArray(p.categories) ? p.categories : [p.categories];
-        const tags = Array.isArray(p.tags) ? p.tags : [p.tags];
-        return cats.includes(tag) || tags.includes(tag);
-    });
-    document.getElementById('active-filter-name').textContent = tag;
-    document.getElementById('filter-indicator').classList.remove('hidden');
-    renderPosts(filtered);
-}
-
-window.clearFilter = function() {
-    document.getElementById('filter-indicator').classList.add('hidden');
-    renderPosts(ALL_POSTS);
-}
-
-function createPostCard(post){
-    const card = document.createElement('div');
-    card.className = 'post block group p-6 rounded bg-neutral-900/40 hover:bg-neutral-900/80 transition border border-neutral-800 hover:border-yellow-500/50 relative overflow-hidden';
-    const linkOverlay = document.createElement('a');
-    const id = encodeURIComponent(post.filename.replace(/\.md$/i,''));
-    linkOverlay.href = `post.html?id=${id}`;
-    linkOverlay.className = 'absolute inset-0 z-0';
-    card.appendChild(linkOverlay);
-
-    const topRow = document.createElement('div');
-    topRow.className = 'flex justify-between items-center mb-3 relative z-10 pointer-events-none opacity-60 font-mono text-xs';
-    const dateSpan = document.createElement('span');
-    dateSpan.textContent = post.date || 'UNKNOWN_DATE';
-    topRow.appendChild(dateSpan);
-
-    const cats = Array.isArray(post.categories) ? post.categories : (post.categories ? [post.categories] : []);
-    if(cats.length > 0) {
-        const badge = document.createElement('button');
-        badge.className = 'text-[10px] uppercase font-bold px-2 py-0.5 border border-neutral-700 text-neutral-400 bg-black hover:text-yellow-400 hover:border-yellow-400 transition cursor-pointer pointer-events-auto';
-        badge.textContent = cats[0];
-        badge.onclick = (e) => { e.preventDefault(); e.stopPropagation(); window.filterPosts(cats[0]); };
-        topRow.appendChild(badge);
-    }
-    card.appendChild(topRow);
-
-    const titleDiv = document.createElement('div');
-    titleDiv.className = 'relative z-10 pointer-events-none pr-0 sm:pr-20';
-    const h3 = document.createElement('h3');
-    h3.className = 'text-xl sm:text-2xl font-bold group-hover:text-yellow-100 transition leading-tight text-white mb-2';
-    const enTitle = document.createElement('span'); enTitle.className = 'content-en'; enTitle.textContent = post.title_en;
-    const zhTitle = document.createElement('span'); zhTitle.className = 'content-zh hidden font-serif-cn'; zhTitle.textContent = post.title_zh || post.title_en;
-    h3.appendChild(enTitle); h3.appendChild(zhTitle);
-    titleDiv.appendChild(h3);
-    card.appendChild(titleDiv);
-
-    const contentRow = document.createElement('div');
-    contentRow.className = 'flex justify-between items-start relative z-10 pointer-events-none mb-4';
-    const p = document.createElement('div'); 
-    p.className = 'text-sm text-neutral-400 font-light leading-relaxed flex-1';
-    const pEn = document.createElement('span'); pEn.className = 'content-en'; pEn.textContent = post.summary_en || '';
-    const pZh = document.createElement('span'); pZh.className = 'content-zh hidden'; pZh.textContent = post.summary_zh || '';
-    p.appendChild(pEn); p.appendChild(pZh);
-    contentRow.appendChild(p);
-    const thumbBox = document.createElement('div');
-    thumbBox.className = 'thumb-box';
-    if (post.thumbnail) {
-        thumbBox.classList.add('has-img');
-        const img = document.createElement('img');
-        img.src = post.thumbnail;
-        thumbBox.appendChild(img);
-    }
-    contentRow.appendChild(thumbBox);
-    card.appendChild(contentRow);
-
-    const tags = Array.isArray(post.tags) ? post.tags : (post.tags ? [post.tags] : []);
-    if(tags.length > 0) {
-        const metaRow = document.createElement('div');
-        metaRow.className = 'flex flex-wrap gap-2 mt-auto relative z-20';
-        tags.forEach(t => {
-            const span = document.createElement('button');
-            span.onclick = (e) => { e.preventDefault(); e.stopPropagation(); window.filterPosts(t); };
-            span.className = 'tag-pill px-2 py-1 rounded-sm cursor-pointer pointer-events-auto';
-            span.textContent = '#' + t;
-            metaRow.appendChild(span);
-        });
-        card.appendChild(metaRow);
-    }
-    return card;
-}
-
-function renderPosts(postsToRender) {
-    const listContainer = document.getElementById('post-list');
-    listContainer.innerHTML = '';
-    if(postsToRender.length === 0) {
-        listContainer.innerHTML = '<div class="text-center opacity-30 font-mono py-10">/VAR/LOG/EMPTY</div>'; return;
-    }
-    postsToRender.forEach(p => listContainer.appendChild(createPostCard(p)));
-    updateLang();
-}
-
-// 🔥 带有 SessionStorage 缓存的加载器 🔥
-async function loadData(){
-    const listContainer = document.getElementById('post-list');
-    
-    // 1. 检查缓存
-    const CACHE_KEY = 'hdipers_posts_cache';
-    const CACHE_TIME_KEY = 'hdipers_posts_time';
-    const cachedData = sessionStorage.getItem(CACHE_KEY);
-    const cachedTime = sessionStorage.getItem(CACHE_TIME_KEY);
-    const now = Date.now();
-    
-    // 如果缓存存在且小于5分钟，直接使用
-    if (cachedData && cachedTime && (now - cachedTime < 5 * 60 * 1000)) {
-        console.log("Using Cached Data");
-        ALL_POSTS = JSON.parse(cachedData);
-        renderPosts(ALL_POSTS);
-        return;
-    }
-
-    try{
-        const apiUrl = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPO}/contents/${POSTS_FOLDER}`;
-        const res = await fetch(apiUrl);
-        if(!res.ok) throw new Error(res.status);
-        const files = await res.json();
-        const mdFiles = files.filter(f=>/\.md$/i.test(f.name));
-        if(mdFiles.length===0){ listContainer.innerHTML = '<div class="text-center opacity-30 font-mono">NO_DATA_FOUND</div>'; return; }
-
-        ALL_POSTS = await Promise.all(mdFiles.map(async f=>{
-            try{
-                const txtRes = await fetch(f.download_url); // 这里是 Raw 链接，不耗 API
-                if(!txtRes.ok) throw new Error('Failed');
-                const text = await txtRes.text();
-                const parsed = parseFrontMatter(text);
-                const meta = parsed.meta || {};
-                const thumb = extractFirstImage(parsed.body);
-                
-                return {
-                    filename: f.name,
-                    title_en: meta.title_en || meta.title || f.name.replace(/\.md$/,''),
-                    title_zh: meta.title_zh || '',
-                    date: meta.date || '',
-                    summary_en: meta.summary_en || meta.summary || '',
-                    summary_zh: meta.summary_zh || '',
-                    categories: meta.categories || [],
-                    tags: meta.tags || [],
-                    thumbnail: thumb
-                };
-            }catch(e){ return null; }
-        }));
-        ALL_POSTS = ALL_POSTS.filter(p => p !== null);
-        ALL_POSTS.sort((a,b)=>{
-            const da = a.date ? Date.parse(a.date) : 0;
-            const db = b.date ? Date.parse(b.date) : 0;
-            return (db - da) || a.filename.localeCompare(b.filename);
-        });
-        
-        // 存入缓存
-        sessionStorage.setItem(CACHE_KEY, JSON.stringify(ALL_POSTS));
-        sessionStorage.setItem(CACHE_TIME_KEY, now);
-        
-        renderPosts(ALL_POSTS);
-    }catch(err){
-        console.error(err);
-        let errorMsg = "CONNECTION_REFUSED";
-        if (err.message == 403) errorMsg = "API RATE LIMIT (Wait or Clear Cache)";
-        listContainer.innerHTML = `<div class="text-center text-red-500 font-mono text-sm py-10">${errorMsg}<br><span class="text-xs opacity-50">Try refreshing later.</span></div>`;
-    }
-}
-
-const canvas = document.getElementById('gridCanvas');
-const ctx = canvas.getContext('2d');
-let w, h;
-function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
-function draw() {
-    ctx.clearRect(0, 0, w, h);
-    ctx.strokeStyle = '#333';
-    ctx.lineWidth = 0.5;
-    const step = 40;
-    for (let x = 0; x <= w; x += step) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
-    for (let y = 0; y <= h; y += step) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
-}
-window.addEventListener('resize', () => { resize(); draw(); });
-resize(); draw();
-
-loadData();
+    loadPost();
 </script>
 </body>
 </html>
