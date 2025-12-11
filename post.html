@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HDip Notes | 22abad</title>
+    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
+    <link href="[https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;800&family=Noto+Serif+SC:wght@400;700&display=swap](https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;800&family=Noto+Serif+SC:wght@400;700&display=swap)" rel="stylesheet">
+    <script src="[https://cdn.jsdelivr.net/npm/marked/marked.min.js](https://cdn.jsdelivr.net/npm/marked/marked.min.js)"></script>
+    <link href="[https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css](https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css)" rel="stylesheet" />
+    <script src="[https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js](https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js)"></script>
+    <script src="[https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js](https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js)"></script>
+    <script type="module">
+        import mermaid from '[https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs](https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs)';
+        mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+        window.runMermaid = async () => {
+            await mermaid.run({ querySelector: '.mermaid' });
+        };
+    </script>
+    
+    <style>
+        :root{--bg:#111; --text:#eee; --accent:#facc15;} /* Yellow accent for HDipers */
+        body { background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; }
+        .font-cn { font-family: 'Noto Serif SC', serif; }
+        .prose h1, .prose h2 { color: #fff; margin-top: 2em; margin-bottom: 0.5em; font-weight: 800; }
+        .prose h1 { font-size: 2.5rem; border-bottom: 2px solid var(--accent); display: inline-block; }
+        .prose h2 { font-size: 1.8rem; color: var(--accent); }
+        .prose p { margin-bottom: 1.5em; line-height: 1.8; opacity: 0.9; font-size: 1.1rem; }
+        .prose pre { background: #1a1a1a !important; border: 1px solid #333; border-radius: 8px; padding: 1em; overflow-x: auto; }
+        .prose blockquote { border-left: 4px solid var(--accent); padding-left: 1em; color: #aaa; font-style: italic; }
+        .prose img { border-radius: 8px; border: 1px solid #333; margin: 2rem 0; }
+        /* Mermaid Styling */
+        .mermaid { background: #1a1a1a; padding: 20px; border-radius: 8px; text-align: center; margin: 2rem 0; }
+    </style>
+</head>
+<body class="antialiased selection:bg-yellow-500 selection:text-black">
+
+<nav class="fixed top-0 w-full p-4 flex justify-between items-center z-50 bg-black/80 backdrop-blur border-b border-white/10">
+    <a href="index.html" class="font-bold tracking-tighter text-xl hover:text-yellow-400 transition">HDIPERS.NOTES</a>
+    <button id="langToggle" class="text-xs border border-white/20 px-3 py-1 rounded hover:bg-white/10 transition uppercase">Switch to 中文</button>
+</nav>
+
+<main class="max-w-3xl mx-auto px-6 py-32">
+    <header class="mb-12">
+        <h1 id="post-title" class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">Loading...</h1>
+        <div class="flex gap-4 text-sm opacity-50 font-mono">
+            <span id="post-date"></span>
+            <span id="post-tags"></span>
+        </div>
+    </header>
+
+    <article id="post-body" class="prose">
+        </article>
+</main>
+
+<script>
+    // ⚡️ CONFIGURATION ⚡️
+    const GITHUB_USERNAME = '22abad'; // 你的 GitHub 用户名
+    const GITHUB_REPO = 'hdipers-notes';  // 你新建的仓库名
+    const POSTS_FOLDER = 'posts';
+
+    // Logic: Same as before but with Mermaid integration
+    const toggleBtn = document.getElementById('langToggle');
+    let isEnglish = true;
+
+    function updateLang() {
+        document.querySelectorAll('.content-en').forEach(el => el.classList.toggle('hidden', !isEnglish));
+        document.querySelectorAll('.content-zh').forEach(el => el.classList.toggle('hidden', isEnglish));
+        toggleBtn.textContent = isEnglish ? 'SWITCH TO 中文' : 'SWITCH TO ENGLISH';
+    }
+    toggleBtn.addEventListener('click', ()=>{ isEnglish = !isEnglish; updateLang(); });
+
+    function getQueryParam(name) { return new URLSearchParams(window.location.search).get(name); }
+
+    function parseFrontMatter(raw){
+        const result = {meta:{}, body: raw};
+        const m = raw.match(/^---\s*([\s\S]*?)\s*---\s*/);
+        if(!m) return result;
+        // Simple Parser
+        const lines = m[1].split('\n');
+        lines.forEach(line => {
+            const split = line.indexOf(':');
+            if(split > 0) result.meta[line.slice(0,split).trim()] = line.slice(split+1).trim();
+        });
+        result.body = raw.slice(m[0].length);
+        return result;
+    }
+
+    async function loadPost(){
+        const filename = getQueryParam('id');
+        if(!filename) return;
+        try {
+            const url = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/main/${POSTS_FOLDER}/${filename}.md`;
+            const res = await fetch(url);
+            if(!res.ok) throw new Error('Post not found');
+            const text = await res.text();
+            const data = parseFrontMatter(text);
+
+            // Set Meta
+            document.title = data.meta.title || 'Note';
+            document.getElementById('post-title').innerHTML = `
+                <span class="content-en">${data.meta.title_en || data.meta.title}</span>
+                <span class="content-zh hidden font-cn">${data.meta.title_zh || data.meta.title}</span>
+            `;
+            document.getElementById('post-date').textContent = data.meta.date;
+
+            // Render Body
+            const renderer = new marked.Renderer();
+            // Custom renderer for Mermaid
+            renderer.code = function(code, language) {
+                if (language === 'mermaid') {
+                    return `<div class="mermaid">${code}</div>`;
+                }
+                return `<pre><code class="language-${language}">${code}</code></pre>`;
+            };
+
+            const rawHTML = marked.parse(data.body, { renderer: renderer });
+            
+            // Post-process for Bilingual Tags
+            let processedHTML = rawHTML
+                .replace(/\[EN\]([\s\S]*?)\[END\]/g, '<div class="content-en">$1</div>')
+                .replace(/\[ZH\]([\s\S]*?)\[END\]/g, '<div class="content-zh hidden font-cn">$1</div>');
+
+            document.getElementById('post-body').innerHTML = processedHTML;
+            
+            updateLang();
+            if(window.Prism) Prism.highlightAll();
+            if(window.runMermaid) window.runMermaid(); // Trigger Mermaid
+
+        } catch(e) {
+            console.error(e);
+            document.getElementById('post-body').innerHTML = "Error loading post.";
+        }
+    }
+    loadPost();
+</script>
+</body>
+</html>

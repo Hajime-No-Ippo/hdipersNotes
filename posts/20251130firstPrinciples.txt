@@ -1,0 +1,92 @@
+---
+title: "The Art of Simplification: From Courtroom Strategy to Coding Philosophy"
+title_zh: "简化的艺术：从法庭策略到代码哲学"
+date: 2025-11-30
+author: "Dong"
+categories: 
+  - "Essays"
+  - "Philosophy"
+  - "Mindset"
+tags:
+  - "First Principles"
+  - "Law"
+  - "Career"
+  - "Validation"
+summary_en: "Applying the 'First Principles' thinking learned from my legal career to Computer Science. Why GPA and salary are irrelevant to me, and why job hunting is merely a validation of true knowledge. A perfect closed loop."
+summary_zh: "将法律生涯中习得的“第一性原理”思维应用到计算机科学。探讨为什么GPA和薪水对我不再重要，以及为什么找工作仅仅是对真才实学的验证。一个完美的闭环。"
+---
+
+[EN]
+# The Art of Simplification
+
+## 1. The Skeleton of a Story
+I have a habit of simplifying everything. This was forged during my years in law.
+A case might seem complex, but based on my experience as both a judge and a lawyer, it always comes down to telling a story. And every story must have a skeleton.
+This skeleton is the essence of things—what Elon Musk calls "First Principles."
+
+In court, I read the room. If the judge has patience (which is rare), I put on a show for my client, demonstrating how I logically crush the opposition. But usually, the judge just wants it to end. In those moments, I strip away the noise and present only the "disputed focus"—the skeleton—in the simplest, most plain language possible.
+
+[END]
+
+[ZH]
+# 简化的艺术
+
+## 1. 故事的骨架
+我喜欢把任何事情简化。这是我在法律执业过程中养成的习惯。
+一个案子看似复杂，但结合我做法官和律师的经验，本质上就是给法官讲一个故事。而故事的前提，是一定要有一个骨架。
+这个骨架就是事物的本质，也就是马斯克所谓的“第一性原理”。
+
+在法庭上，我会观察局势。如果法官有耐心听我啰嗦（虽然多数时候他们都想快点结束），我会给我的委托人“表演”一下，我是如何在法理和逻辑上碾压对方的。但如果没有，我会剥离掉所有噪音，把最重要的考量（所谓的争议焦点）总结给法官，并用最简短、最通俗的语言表达出来。
+[END]
+
+[EN]
+## 2. Why am I Here? (The Irrelevance of GPA)
+Applying this simplification to my new life: What am I learning? To what degree?
+Take myself as an example. I am not looking for further academic "deepening." GPA means almost nothing to me.
+Is finding a job the ultimate goal? Even a Big Tech salary here wouldn't match my previous income in China.
+So, why am I studying? Why am I job hunting?
+
+If money isn't the driver, what is the skeleton of this journey?
+
+[END]
+
+[ZH]
+## 2. 我为什么在这里？（GPA的无意义）
+把这种简化思维应用到我的新生活：我们要学什么？学到什么程度？
+拿我自己举例。我不会再去搞学术“深造”了，所以 GPA 对我来说几乎没有任何意义。
+那么，找到工作真的那么重要吗？就算是这边大厂的入职工资，其实也不够我在国内一年的收入。
+既然如此，我为什么还要拼命学习和找工作？
+
+如果钱不是驱动力，这段旅程的“骨架”到底是什么？
+[END]
+
+[EN]
+## 3. The Perfect Closed Loop
+What I want is **Validation**.
+If I learn well, exams are trivial. If exams feel hard, it's just feedback that I haven't grasped the essence.
+Job hunting is the ultimate validation. It's a comprehensive test.
+
+Take LeetCode "Easy" problems. They are often incredibly elegant. I spend time just admiring the perfection of the code. In an interview, when you meet a real person, what do they ask? They ask the questions that arise when you truly understand those simple problems.
+
+If I have the ability to get a job, it proves I have mastered the knowledge. And if I have that ability, does it matter if I am in Ireland or Thailand?
+**It’s a perfect closed loop.**
+
+So, I am here for one purpose only: **To learn the knowledge.**
+Everything else—grades, offers, status—are just side effects. They are merely the scenery along the way.
+
+[END]
+
+[ZH]
+## 3. 完美的闭环
+我要的是一个**验证**。
+如果学得好，考试那些东西根本就不是问题；如果觉得难，那是反馈我还没抓到本质。
+找工作更是一个终极检验，是综合考量。
+
+就拿 LeetCode 的简单题来说，它们本身非常精妙。每次做完，我都要欣赏好一会儿代码的完美逻辑。而面试的时候，如果题刷好了，面试官会问什么？就是平时我在做简单题时产生的那些关于本质的疑问。
+
+所以，如果我具备了找到工作的能力，那不就说明我学好了吗？
+如果我具备了这种能力，还在乎我是在爱尔兰还是在泰国吗？
+**这是一个完美的闭环！**
+
+所以，来到这里，我唯一的目的就是学到知识。其他一切——成绩、Offer、名声——都只是辅助，都是表象，都是 **Side Effects（副作用/副产品）**。
+[END]
