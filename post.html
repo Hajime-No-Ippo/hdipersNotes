@@ -72,6 +72,7 @@
 </footer>
 
 <script>
+    // ⚡️ CONFIGURATION ⚡️
     const GITHUB_USERNAME = '22abad'; 
     const GITHUB_REPO = 'hdipersNotes';
     const POSTS_FOLDER = 'posts';
@@ -88,21 +89,41 @@
 
     function getQueryParam(name) { return new URLSearchParams(window.location.search).get(name); }
 
+    // 🔥 增强版解析器：专门处理怪异的格式和空格 🔥
     function parseFrontMatter(raw){
+        // 1. 强制去除 BOM 头和首尾空白
+        raw = raw.trim();
+        
         const result = {meta:{}, body: raw};
-        const m = raw.match(/^---\s*([\s\S]*?)\s*---\s*/);
-        if(!m) return result;
-        const head = m[1];
-        const regex = /^([a-zA-Z0-9_-]+):\s*(.+)$/gm;
-        let match;
-        while ((match = regex.exec(head)) !== null) {
-            const key = match[1].trim();
-            let val = match[2].trim();
-            if (/^['"].*['"]$/.test(val)) val = val.slice(1, -1);
-            if (key === 'tags' || key === 'categories') result.meta[key] = val.split(',').map(s => s.trim());
-            else result.meta[key] = val;
+        // 2. 更宽松的正则，允许第一行前面有杂质
+        const match = raw.match(/^-{3,}\s*([\s\S]+?)\s*-{3,}\s*([\s\S]*)$/);
+        
+        if(!match) {
+            console.warn("FrontMatter Not Found! Rendering full text.");
+            return result;
         }
-        result.body = raw.slice(m[0].length);
+        
+        const frontMatter = match[1];
+        result.body = match[2]; // 提取正文
+
+        // 3. 逐行解析，容错处理
+        const lines = frontMatter.split(/\r?\n/);
+        lines.forEach(line => {
+            const colonIdx = line.indexOf(':');
+            if (colonIdx === -1) return; // 跳过没冒号的行
+            
+            const key = line.slice(0, colonIdx).trim();
+            let val = line.slice(colonIdx + 1).trim();
+            
+            // 去除引号
+            if (/^['"].*['"]$/.test(val)) val = val.slice(1, -1);
+            
+            if (key === 'tags' || key === 'categories') {
+                result.meta[key] = val.split(',').map(s => s.trim());
+            } else {
+                result.meta[key] = val;
+            }
+        });
         return result;
     }
 
@@ -115,38 +136,52 @@
             const res = await fetch(url);
             
             if(!res.ok) {
-                if(res.status === 404) throw new Error("File not found (404)");
-                if(res.status === 403) throw new Error("API Rate Limit Exceeded. Please wait.");
-                throw new Error(`GitHub API Error: ${res.status}`);
+                if(res.status === 404) throw new Error("404 Not Found (Check Repo Public/Name)");
+                if(res.status === 403) throw new Error("API Limit (Try Mobile Network)");
+                throw new Error(`Error: ${res.status}`);
             }
             
             const json = await res.json();
             const rawText = decodeURIComponent(escape(window.atob(json.content)));
+            
+            // 解析前先打印一下，看看原始数据是不是乱的
+            // console.log("Raw Text:", rawText.substring(0, 200)); 
+
             const data = parseFrontMatter(rawText);
 
+            // 渲染标题
             document.title = (data.meta.title || 'Log') + ' | HDIPERS';
             document.getElementById('post-title').innerHTML = `
-                <span class="content-en block">${data.meta.title_en || data.meta.title}</span>
-                <span class="content-zh hidden font-cn block mt-2 text-2xl md:text-4xl opacity-90">${data.meta.title_zh || data.meta.title}</span>
+                <span class="content-en block">${data.meta.title_en || data.meta.title || 'Untitled'}</span>
+                <span class="content-zh hidden font-cn block mt-2 text-2xl md:text-4xl opacity-90">${data.meta.title_zh || ''}</span>
             `;
             document.getElementById('post-date').textContent = data.meta.date || '';
 
             if(data.meta.tags) {
                 const tagContainer = document.getElementById('post-tags');
-                tagContainer.innerHTML = (Array.isArray(data.meta.tags) ? data.meta.tags : [data.meta.tags]).map(t => `<span class="border border-neutral-700 px-1 rounded">#${t}</span>`).join(' ');
+                const tagArray = Array.isArray(data.meta.tags) ? data.meta.tags : (data.meta.tags ? [data.meta.tags] : []);
+                tagContainer.innerHTML = tagArray.map(t => `<span class="border border-neutral-700 px-1 rounded">#${t}</span>`).join(' ');
             }
 
             const renderer = new marked.Renderer();
             
-            // 修复: 防止 href 为 null 导致 startsWith 报错
+            // 🔥 修复 startsWith 报错：增加判空逻辑 🔥
             renderer.image = function(href, title, text) {
-                if (!href) return '';
-                if (!href.startsWith('http')) {
+                if (!href) return text; // 如果 href 是空的，直接返回文字
+                
+                // 处理相对路径
+                if (!href.startsWith('http') && !href.startsWith('//')) {
                     const rawUrl = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/main/${href}`;
                     return `<img src="${rawUrl}" alt="${text}" title="${title || ''}" />`;
                 }
                 return `<img src="${href}" alt="${text}" title="${title || ''}" />`;
             };
+            
+            // 🔥 修复 Link 报错：增加判空逻辑 🔥
+            renderer.link = function(href, title, text) {
+                if (!href) return text;
+                return `<a href="${href}" title="${title || ''}">${text}</a>`;
+            }
             
             renderer.code = function(code, language) {
                 if (language === 'mermaid') return `<div class="mermaid">${code}</div>`;
@@ -172,6 +207,12 @@
                 <div class="border border-red-900 bg-red-900/20 p-8 rounded text-center">
                     <h3 class="text-red-500 font-bold text-xl mb-2">SYSTEM ERROR</h3>
                     <p class="font-mono text-sm text-red-300 mb-4">${e.message}</p>
+                    <div class="text-left text-xs text-neutral-500 font-mono bg-black p-4 rounded overflow-auto">
+                        Troubleshooting:<br>
+                        1. Check if repo is Public.<br>
+                        2. Check if 'posts' folder exists.<br>
+                        3. If API Limit, wait 1hr or switch network.
+                    </div>
                     <a href="index.html" class="inline-block mt-6 border border-neutral-600 px-4 py-2 rounded hover:bg-neutral-800 transition text-sm">RETURN TO INDEX</a>
                 </div>`;
         }
