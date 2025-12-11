@@ -3,82 +3,102 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Flow States | flowstates.me</title>
+    <title>HDIPERS.LOG | 22abad</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Noto+Serif+SC:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;700;900&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root{--bg:#0f172a;--muted:#94a3b8}
-        body { background-color: var(--bg); color: #e2e8f0; overflow-x: hidden; }
-        .font-serif-en { font-family: 'Lora', serif; }
+        :root{--bg:#0a0a0a; --muted:#737373; --accent:#facc15;} /* ⚡️ 硬核黄 Accent */
+        body { background-color: var(--bg); color: #e5e5e5; overflow-x: hidden; font-family: 'Inter', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
         .font-serif-cn { font-family: 'Noto Serif SC', serif; }
-        #flowCanvas { position: fixed; inset:0; width:100%; height:100%; z-index:-1; opacity:0.6; }
-        .fade-in { animation: fadeIn 1.2s ease-out both; }
-        @keyframes fadeIn { from{opacity:0; transform:translateY(20px)} to{opacity:1; transform:none} }
+        
+        /* 背景网格，更有科技感 */
+        #gridCanvas { position: fixed; inset:0; width:100%; height:100%; z-index:-1; opacity:0.15; pointer-events: none;}
+        
+        .fade-in { animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+        @keyframes fadeIn { from{opacity:0; transform:translateY(20px) scale(0.98)} to{opacity:1; transform:none} }
+        
         a.post { text-decoration: none; }
         
-        .tag-pill { transition: all 0.2s; }
-        .tag-pill:hover { border-color: #34d399; color: #34d399; }
-        
-        /* Thumbnail Styles */
+        /* 标签药丸样式 */
+        .tag-pill { 
+            font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; 
+            border: 1px solid #333; color: #666; transition: all 0.2s; 
+        }
+        .tag-pill:hover { border-color: var(--accent); color: var(--accent); background: rgba(250, 204, 21, 0.1); }
+
+        /* 缩略图样式 */
         .thumb-box {
-            width: 80px; height: 80px; flex-shrink: 0; border-radius: 8px; 
-            overflow: hidden; background: #1e293b; margin-left: 1rem;
-            display: none; /* Hidden by default */
+            width: 80px; height: 80px; flex-shrink: 0; border-radius: 4px; 
+            overflow: hidden; background: #171717; margin-left: 1rem; border: 1px solid #333;
+            display: none; 
         }
         .thumb-box.has-img { display: block; }
-        .thumb-box img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: opacity 0.3s; }
-        .post:hover .thumb-box img { opacity: 1; }
+        .thumb-box img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; transition: opacity 0.3s; filter: grayscale(100%); }
+        .post:hover .thumb-box img { opacity: 1; filter: grayscale(0%); }
     </style>
 </head>
-<body class="antialiased selection:bg-emerald-500 selection:text-white">
+<body class="antialiased selection:bg-yellow-500 selection:text-black">
 
-<canvas id="flowCanvas" aria-hidden="true"></canvas>
+<canvas id="gridCanvas"></canvas>
 
-<nav class="fixed top-0 w-full p-6 flex justify-between items-center z-50 backdrop-blur-md bg-slate-900/40 border-b border-slate-800/50">
-    <div class="text-xl font-bold tracking-widest opacity-90 hover:text-emerald-400 transition cursor-pointer" onclick="window.location.reload()">flowstates.me</div>
-    <button id="langToggle" class="px-4 py-1 border border-slate-500 rounded-full text-xs hover:bg-emerald-900/50 hover:border-emerald-400 transition uppercase tracking-wide">SWITCH TO 中文</button>
+<nav class="fixed top-0 w-full p-6 flex justify-between items-center z-50 backdrop-blur-md bg-black/60 border-b border-white/10">
+    <div class="text-xl font-black tracking-tighter font-mono hover:text-yellow-400 transition cursor-pointer" onclick="window.location.reload()">
+        HDIPERS<span class="text-yellow-500">.LOG</span>
+    </div>
+    <button id="langToggle" class="px-3 py-1 border border-white/20 rounded text-xs hover:bg-white/10 hover:border-white/50 transition uppercase tracking-wide font-mono">CN / EN</button>
 </nav>
 
-<main class="min-h-screen w-full max-w-2xl mx-auto px-4 sm:px-6 pt-32 pb-20 relative z-10">
-    <article class="fade-in mb-16 text-center">
-        <h1 class="text-5xl sm:text-6xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-blue-300">
-            <span class="content-en font-serif-en">Flow States</span>
-            <span class="content-zh hidden font-serif-cn">心流时刻</span>
+<main class="min-h-screen w-full max-w-3xl mx-auto px-4 sm:px-6 pt-32 pb-20 relative z-10">
+    <article class="fade-in mb-20">
+        <h1 class="text-5xl sm:text-7xl font-black mb-6 tracking-tight leading-none text-white">
+            <span class="content-en">SURVIVAL<br><span class="text-yellow-500">GUIDE.</span></span>
+            <span class="content-zh hidden font-serif-cn">硬核<br><span class="text-yellow-500">生存指南。</span></span>
         </h1>
-        <div class="space-y-4 text-lg sm:text-xl opacity-80 font-light max-w-lg mx-auto leading-relaxed">
-            <p class="content-en font-serif-en">A digital garden dedicated to capturing the fleeting moments of absolute clarity and creation.</p>
-            <p class="content-zh hidden font-serif-cn">一座数字花园，致力于捕捉那些绝对清醒与创造力的稍纵即逝的时刻。</p>
+        
+        <div class="space-y-4 text-lg sm:text-xl text-neutral-400 font-normal max-w-xl leading-relaxed border-l-2 border-yellow-500/50 pl-6">
+            <p class="content-en">
+                Raw notes on CS144, Algorithms, and High-Performance Engineering. 
+                <span class="block text-sm font-mono mt-2 text-neutral-500">// No fluff. Just logic.</span>
+            </p>
+            <p class="content-zh hidden font-serif-cn">
+                关于 CS144、算法与高性能工程的原始笔记。
+                <span class="block text-sm font-mono mt-2 text-neutral-500">// 拒绝废话。只有逻辑。</span>
+            </p>
         </div>
     </article>
 
-    <section id="blog-section" class="fade-in border-t border-slate-800 pt-10">
-        <div class="flex justify-between items-end mb-8 px-2">
-            <h2 class="text-xs uppercase tracking-[0.2em] text-emerald-500">
-                <span class="content-en">Latest Logs</span>
-                <span class="content-zh hidden">最新日志</span>
+    <section id="blog-section" class="fade-in border-t border-neutral-800 pt-10">
+        <div class="flex justify-between items-end mb-8 px-1">
+            <h2 class="text-xs font-mono font-bold uppercase tracking-widest text-yellow-500">
+                <span class="content-en">:: SYSTEM LOGS</span>
+                <span class="content-zh hidden">:: 系统日志</span>
             </h2>
-            <div id="filter-indicator" class="hidden text-xs flex items-center gap-2">
-                <span class="opacity-60">Filtered by:</span>
-                <span id="active-filter-name" class="text-emerald-400 font-bold border-b border-emerald-400"></span>
-                <button onclick="clearFilter()" class="hover:text-red-400 ml-2 font-bold px-2" title="Clear Filter">✕</button>
+            <div id="filter-indicator" class="hidden text-xs flex items-center gap-2 font-mono">
+                <span class="opacity-50">FILTER:</span>
+                <span id="active-filter-name" class="text-yellow-400 font-bold border-b border-yellow-400"></span>
+                <button onclick="clearFilter()" class="hover:text-red-400 ml-2 font-bold px-2" title="Clear Filter">[x]</button>
             </div>
         </div>
 
-        <div id="post-list" class="space-y-8">
-            <div class="text-center opacity-50 text-sm italic py-10">
-                <span class="content-en">Connecting to memory...</span>
-                <span class="content-zh hidden">正在连接记忆...</span>
+        <div id="post-list" class="space-y-4">
+            <div class="text-center opacity-30 text-sm font-mono py-10">
+                <span class="content-en">Initializing sequence...</span>
+                <span class="content-zh hidden">正在初始化序列...</span>
             </div>
         </div>
     </section>
 </main>
 
-<footer class="w-full text-center opacity-40 text-xs uppercase tracking-widest pb-8 relative z-10">22abad @ Ireland</footer>
+<footer class="w-full text-center opacity-30 text-xs font-mono uppercase tracking-widest pb-8 relative z-10">
+    22abad @ Ireland // SYSTEM ONLINE
+</footer>
 
 <script>
 let ALL_POSTS = []; 
+// ⚡️ CRITICAL CONFIG UPDATE ⚡️
 const GITHUB_USERNAME = '22abad';
-const GITHUB_REPO = 'hdipers-notes';
+const GITHUB_REPO = 'hdipersNotes'; // 已修正为新仓库
 const POSTS_FOLDER = 'posts';
 
 const toggleBtn = document.getElementById('langToggle');
@@ -110,7 +130,6 @@ function parseFrontMatter(raw){
     result.body = raw.slice(m[0].length); return result;
 }
 
-// Helper to extract first image from markdown body
 function extractFirstImage(markdown) {
     const imgRegex = /!\[.*?\]\((.*?)\)/;
     const match = markdown.match(imgRegex);
@@ -134,8 +153,9 @@ window.clearFilter = function() {
 }
 
 function createPostCard(post){
+    // 卡片样式更新：更硬朗的边框，更黑的背景
     const card = document.createElement('div');
-    card.className = 'post block group p-6 sm:p-8 rounded-xl bg-slate-800/30 hover:bg-slate-800/60 transition border border-slate-800 hover:border-slate-600 relative overflow-hidden shadow-sm hover:shadow-md';
+    card.className = 'post block group p-6 rounded bg-neutral-900/40 hover:bg-neutral-900/80 transition border border-neutral-800 hover:border-yellow-500/50 relative overflow-hidden';
 
     const linkOverlay = document.createElement('a');
     const id = encodeURIComponent(post.filename.replace(/\.md$/i,''));
@@ -143,50 +163,46 @@ function createPostCard(post){
     linkOverlay.className = 'absolute inset-0 z-0';
     card.appendChild(linkOverlay);
 
-    // Top Row
+    // Top Row: Date & Badges
     const topRow = document.createElement('div');
-    topRow.className = 'flex flex-wrap justify-between items-start mb-3 relative z-10 pointer-events-none gap-2';
+    topRow.className = 'flex justify-between items-center mb-3 relative z-10 pointer-events-none opacity-60 font-mono text-xs';
+    
+    const dateSpan = document.createElement('span');
+    dateSpan.textContent = post.date || 'UNKNOWN_DATE';
+    topRow.appendChild(dateSpan);
 
     const cats = Array.isArray(post.categories) ? post.categories : (post.categories ? [post.categories] : []);
     if(cats.length > 0) {
         const badge = document.createElement('button');
-        badge.className = 'text-[10px] uppercase tracking-widest px-2 py-1 rounded-full border border-emerald-500/30 text-emerald-400 bg-slate-900/50 backdrop-blur-sm hover:bg-emerald-900/30 hover:text-white transition cursor-pointer pointer-events-auto sm:absolute sm:top-0 sm:right-0 sm:mt-8 sm:mr-8';
+        badge.className = 'text-[10px] uppercase font-bold px-2 py-0.5 border border-neutral-700 text-neutral-400 bg-black hover:text-yellow-400 hover:border-yellow-400 transition cursor-pointer pointer-events-auto';
         badge.textContent = cats[0];
         badge.onclick = (e) => { e.preventDefault(); e.stopPropagation(); window.filterPosts(cats[0]); };
-        const badgeWrapper = document.createElement('div');
-        badgeWrapper.appendChild(badge);
-        topRow.appendChild(badgeWrapper);
-    } else { topRow.appendChild(document.createElement('div')); }
-
-    const mobileDate = document.createElement('div');
-    mobileDate.className = 'text-xs font-mono opacity-40 mb-2 sm:hidden';
-    mobileDate.textContent = post.date || '';
-    card.appendChild(mobileDate);
+        topRow.appendChild(badge);
+    }
+    card.appendChild(topRow);
 
     // Title
     const titleDiv = document.createElement('div');
     titleDiv.className = 'relative z-10 pointer-events-none pr-0 sm:pr-20';
     const h3 = document.createElement('h3');
-    h3.className = 'text-xl sm:text-2xl font-serif-en group-hover:text-emerald-200 transition font-bold leading-tight text-slate-100 mb-3';
+    h3.className = 'text-xl sm:text-2xl font-bold group-hover:text-yellow-100 transition leading-tight text-white mb-2';
     const enTitle = document.createElement('span'); enTitle.className = 'content-en'; enTitle.textContent = post.title_en;
     const zhTitle = document.createElement('span'); zhTitle.className = 'content-zh hidden font-serif-cn'; zhTitle.textContent = post.title_zh || post.title_en;
     h3.appendChild(enTitle); h3.appendChild(zhTitle);
     titleDiv.appendChild(h3);
     card.appendChild(titleDiv);
 
-    // Content Row (Summary + Thumbnail)
+    // Content Row
     const contentRow = document.createElement('div');
-    contentRow.className = 'flex justify-between items-start relative z-10 pointer-events-none mb-5';
+    contentRow.className = 'flex justify-between items-start relative z-10 pointer-events-none mb-4';
 
-    // Summary
     const p = document.createElement('div'); 
-    p.className = 'text-sm sm:text-base opacity-70 font-light leading-relaxed flex-1';
+    p.className = 'text-sm text-neutral-400 font-light leading-relaxed flex-1';
     const pEn = document.createElement('span'); pEn.className = 'content-en'; pEn.textContent = post.summary_en || '';
     const pZh = document.createElement('span'); pZh.className = 'content-zh hidden'; pZh.textContent = post.summary_zh || '';
     p.appendChild(pEn); p.appendChild(pZh);
     contentRow.appendChild(p);
 
-    // Thumbnail (New Feature)
     const thumbBox = document.createElement('div');
     thumbBox.className = 'thumb-box';
     if (post.thumbnail) {
@@ -206,7 +222,7 @@ function createPostCard(post){
         tags.forEach(t => {
             const span = document.createElement('button');
             span.onclick = (e) => { e.preventDefault(); e.stopPropagation(); window.filterPosts(t); };
-            span.className = 'tag-pill text-[10px] uppercase tracking-wider px-2 py-1 border border-slate-700 text-slate-400 rounded hover:bg-slate-700 cursor-pointer pointer-events-auto';
+            span.className = 'tag-pill px-2 py-1 rounded-sm cursor-pointer pointer-events-auto';
             span.textContent = '#' + t;
             metaRow.appendChild(span);
         });
@@ -219,7 +235,7 @@ function renderPosts(postsToRender) {
     const listContainer = document.getElementById('post-list');
     listContainer.innerHTML = '';
     if(postsToRender.length === 0) {
-        listContainer.innerHTML = '<div class="text-center opacity-50 py-10">No logs found.</div>'; return;
+        listContainer.innerHTML = '<div class="text-center opacity-30 font-mono py-10">/VAR/LOG/EMPTY</div>'; return;
     }
     postsToRender.forEach(p => listContainer.appendChild(createPostCard(p)));
     updateLang();
@@ -233,7 +249,7 @@ async function loadData(){
         if(!res.ok) throw new Error(res.status);
         const files = await res.json();
         const mdFiles = files.filter(f=>/\.md$/i.test(f.name));
-        if(mdFiles.length===0){ listContainer.innerHTML = '<div class="text-center opacity-50">No logs found yet.</div>'; return; }
+        if(mdFiles.length===0){ listContainer.innerHTML = '<div class="text-center opacity-30 font-mono">NO_DATA_FOUND</div>'; return; }
 
         ALL_POSTS = await Promise.all(mdFiles.map(async f=>{
             try{
@@ -242,7 +258,6 @@ async function loadData(){
                 const text = await txtRes.text();
                 const parsed = parseFrontMatter(text);
                 const meta = parsed.meta || {};
-                // Extract image from body
                 const thumb = extractFirstImage(parsed.body);
                 
                 return {
@@ -254,7 +269,7 @@ async function loadData(){
                     summary_zh: meta.summary_zh || '',
                     categories: meta.categories || [],
                     tags: meta.tags || [],
-                    thumbnail: thumb // Store the extracted image URL
+                    thumbnail: thumb
                 };
             }catch(e){ return null; }
         }));
@@ -267,16 +282,26 @@ async function loadData(){
         renderPosts(ALL_POSTS);
     }catch(err){
         console.error(err);
-        listContainer.innerHTML = `<div class="text-center text-red-400 text-sm py-10">Failed to load content.<br><span class="text-xs opacity-50">Try refreshing the page.</span></div>`;
+        listContainer.innerHTML = `<div class="text-center text-red-500 font-mono text-sm py-10">CONNECTION_REFUSED<br><span class="text-xs opacity-50">Check console logs.</span></div>`;
     }
 }
 
-const canvas = document.getElementById('flowCanvas');
-const ctx = canvas.getContext && canvas.getContext('2d');
-let w,h,particles=[];
-function resize(){ if(!canvas) return; w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight; }
-function anim(){ if(!ctx) return; ctx.clearRect(0,0,w,h); particles.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; if(p.x<0) p.x=w; if(p.x>w) p.x=0; if(p.y<0) p.y=h; if(p.y>h) p.y=0; ctx.fillStyle='rgba(52, 211, 153, 0.15)'; ctx.beginPath(); ctx.arc(p.x,p.y,p.s,0,Math.PI*2); ctx.fill(); }); requestAnimationFrame(anim); }
-if(ctx){ window.addEventListener('resize',resize); resize(); for(let i=0;i<40;i++) particles.push({x:Math.random()* (window.innerWidth||800), y:Math.random()* (window.innerHeight||600), vx:(Math.random()-0.5)*0.3, vy:(Math.random()-0.5)*0.3, s:Math.random()*2}); anim(); }
+// 简单的网格背景动画 (替换了原来的 Flow 动画)
+const canvas = document.getElementById('gridCanvas');
+const ctx = canvas.getContext('2d');
+let w, h;
+function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+function draw() {
+    ctx.clearRect(0, 0, w, h);
+    ctx.strokeStyle = '#333';
+    ctx.lineWidth = 0.5;
+    const step = 40;
+    // 只画静态网格，节省资源且显得硬核
+    for (let x = 0; x <= w; x += step) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
+    for (let y = 0; y <= h; y += step) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+}
+window.addEventListener('resize', () => { resize(); draw(); });
+resize(); draw();
 
 loadData();
 </script>
