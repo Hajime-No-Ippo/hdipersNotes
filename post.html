@@ -3,90 +3,68 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HDIPERS.LOG | Loading...</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230a0a0a%22/><path d=%22M25 30 L55 50 L25 70 M65 70 L85 70%22 stroke=%22%23facc15%22 stroke-width=%2210%22 fill=%22none%22 stroke-linecap=%22round%22/></svg>">
+    <title>HDip Notes | 22abad</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;700;900&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
-    
-    <script src="https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js"></script>
-    
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;800&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
     
+    <!-- Mermaid 配置：将 runMermaid 挂载到 window 对象供全局调用 -->
     <script type="module">
         import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-        mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose' });
-        window.runMermaid = async () => { 
-            // The timeout helps ensure the DOM is ready after visibility change
-            setTimeout(async () => {
-                // Find only un-rendered mermaid divs to avoid re-rendering
-                const mermaidDivs = document.querySelectorAll('.mermaid:not([data-processed])');
-                if (mermaidDivs.length > 0) {
-                    await mermaid.run({ nodes: mermaidDivs });
-                }
-            }, 100);
+        mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+        
+        window.runMermaid = async () => {
+            // 找到所有未处理或需要处理的 mermaid div
+            await mermaid.run({ 
+                querySelector: '.mermaid',
+                // 这一点很重要：防止 suppress 错误，强制让它尝试渲染
+                suppressErrors: true 
+            });
         };
     </script>
     
     <style>
-        :root{--bg:#0a0a0a; --text:#e5e5e5; --accent:#facc15;}
-        body { background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; overflow-x: hidden;}
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        :root{--bg:#111; --text:#eee; --accent:#facc15;}
+        body { background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; }
         .font-cn { font-family: 'Noto Serif SC', serif; }
-        .prose { max-width: none; }
-        .prose h1, .prose h2, .prose h3 { color: #fff; margin-top: 2.5em; margin-bottom: 0.8em; font-weight: 800; line-height: 1.2; }
-        .prose h1 { font-size: 2.5rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.3em; display: inline-block; }
+        .prose h1, .prose h2 { color: #fff; margin-top: 2em; margin-bottom: 0.5em; font-weight: 800; }
+        .prose h1 { font-size: 2.5rem; border-bottom: 2px solid var(--accent); display: inline-block; }
         .prose h2 { font-size: 1.8rem; color: var(--accent); }
-        .prose h3 { font-size: 1.4rem; color: #fbbf24; }
-        .prose p { margin-bottom: 1.5em; line-height: 1.8; opacity: 0.9; font-size: 1.05rem; }
-        .prose ul, .prose ol { margin-bottom: 1.5em; padding-left: 1.5em; }
-        .prose ul { list-style-type: disc; }
-        .prose ol { list-style-type: decimal; }
-        .prose li { margin-bottom: 0.5em; }
-        .prose pre { background: #171717 !important; border: 1px solid #333; border-radius: 6px; padding: 1.2em; overflow-x: auto; font-family: 'JetBrains Mono', monospace; margin: 1.5em 0; }
-        .prose code { font-family: 'JetBrains Mono', monospace; background: rgba(255,255,255,0.1); padding: 0.2em 0.4em; border-radius: 4px; font-size: 0.9em; color: var(--accent); }
-        .prose pre code { background: transparent; padding: 0; color: inherit; }
-        .prose blockquote { border-left: 4px solid var(--accent); background: rgba(250, 204, 21, 0.05); padding: 1em 1.5em; color: #d4d4d4; font-style: italic; margin: 2em 0; }
-        .prose img { border-radius: 8px; border: 1px solid #333; margin: 2rem auto; max-width: 100%; display: block; }
-        .mermaid { background: #171717; padding: 20px; border-radius: 8px; text-align: center; margin: 2rem 0; border: 1px solid #333; display: flex; justify-content: center;}
-        .prose table { width: 100%; border-collapse: collapse; margin: 2em 0; }
-        .prose th, .prose td { border: 1px solid #333; padding: 0.75em; text-align: left; }
-        .prose th { background: #262626; color: var(--accent); }
+        .prose p { margin-bottom: 1.5em; line-height: 1.8; opacity: 0.9; font-size: 1.1rem; }
+        .prose pre { background: #1a1a1a !important; border: 1px solid #333; border-radius: 8px; padding: 1em; overflow-x: auto; }
+        .prose blockquote { border-left: 4px solid var(--accent); padding-left: 1em; color: #aaa; font-style: italic; }
+        .prose img { border-radius: 8px; border: 1px solid #333; margin: 2rem 0; }
+        /* Mermaid Styling */
+        .mermaid { background: #1a1a1a; padding: 20px; border-radius: 8px; text-align: center; margin: 2rem 0; display: flex; justify-content: center;}
     </style>
 </head>
 <body class="antialiased selection:bg-yellow-500 selection:text-black">
 
-<nav class="fixed top-0 w-full p-6 flex justify-between items-center z-50 backdrop-blur-md bg-black/80 border-b border-white/10">
-    <a href="index.html" class="font-bold tracking-tighter text-xl font-mono hover:text-yellow-400 transition">HDIPERS<span class="text-yellow-500">.LOG</span></a>
-    <button id="langToggle" class="text-xs font-mono border border-white/20 px-3 py-1 rounded hover:bg-white/10 transition uppercase">CN / EN</button>
+<nav class="fixed top-0 w-full p-4 flex justify-between items-center z-50 bg-black/80 backdrop-blur border-b border-white/10">
+    <a href="index.html" class="font-bold tracking-tighter text-xl hover:text-yellow-400 transition">HDIPERS.NOTES</a>
+    <button id="langToggle" class="text-xs border border-white/20 px-3 py-1 rounded hover:bg-white/10 transition uppercase">Switch to 中文</button>
 </nav>
 
-<main class="max-w-4xl mx-auto px-6 py-32 min-h-screen">
-    <header class="mb-16 border-b border-neutral-800 pb-8">
-        <h1 id="post-title" class="text-3xl md:text-5xl font-black mb-6 leading-tight text-white tracking-tight">Loading...</h1>
-        <div class="flex flex-wrap gap-4 text-xs font-mono text-neutral-500 uppercase tracking-widest">
-            <span id="post-date">...</span>
+<main class="max-w-3xl mx-auto px-6 py-32">
+    <header class="mb-12">
+        <h1 id="post-title" class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">Loading...</h1>
+        <div class="flex gap-4 text-sm opacity-50 font-mono">
+            <span id="post-date"></span>
             <span id="post-tags"></span>
         </div>
     </header>
 
     <article id="post-body" class="prose">
-        <div class="flex flex-col items-center justify-center py-20 opacity-50 space-y-4">
-            <div class="w-8 h-8 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
-            <p class="font-mono text-sm">ACCESSING RAW DATA...</p>
-        </div>
     </article>
 </main>
 
-<footer class="w-full text-center opacity-30 text-xs font-mono uppercase tracking-widest pb-8">
-    22abad @ Ireland // END OF LOG
-</footer>
-
 <script>
-    const GITHUB_USERNAME = '22abad'; 
-    const GITHUB_REPO = 'hdipersNotes';
+    // ⚡️ CONFIGURATION ⚡️
+    const GITHUB_USERNAME = '22abad';
+    const GITHUB_REPO = 'hdipers-notes';
     const POSTS_FOLDER = 'posts';
 
     const toggleBtn = document.getElementById('langToggle');
@@ -96,104 +74,72 @@
         document.querySelectorAll('.content-en').forEach(el => el.classList.toggle('hidden', !isEnglish));
         document.querySelectorAll('.content-zh').forEach(el => el.classList.toggle('hidden', isEnglish));
         toggleBtn.textContent = isEnglish ? 'SWITCH TO 中文' : 'SWITCH TO ENGLISH';
-        // 🔥 THIS IS THE FIX: Re-run Mermaid rendering when language changes.
-        if (window.runMermaid) {
-            window.runMermaid();
-        }
     }
-    toggleBtn.addEventListener('click', ()=>{ isEnglish = !isEnglish; updateLang(); });
+
+    // 🔥 核心修改在这里 🔥
+    toggleBtn.addEventListener('click', async () => { 
+        isEnglish = !isEnglish; 
+        updateLang(); 
+        
+        // 当切换语言后，如果切换到了中文，或者只是为了保险起见
+        // 我们强制清除之前的 Mermaid 处理标记，并重新运行渲染
+        if(window.runMermaid) {
+            // 给一个小小的延时，确保 CSS 的 display:block 已经生效，图表有了宽度
+            setTimeout(async () => {
+                // 可选：清除 data-processed 属性，强制 Mermaid 认为这些还没被画过
+                // 这对于处理之前隐藏的元素非常关键
+                document.querySelectorAll('.mermaid').forEach(el => {
+                    if(el.getAttribute('data-processed')) {
+                        el.removeAttribute('data-processed');
+                    }
+                });
+                await window.runMermaid();
+            }, 50);
+        }
+    });
 
     function getQueryParam(name) { return new URLSearchParams(window.location.search).get(name); }
 
     function parseFrontMatter(raw){
-        raw = raw.trim();
         const result = {meta:{}, body: raw};
-        const match = raw.match(/^-{3,}\s*([\s\S]+?)\s*-{3,}\s*([\s\S]*)$/);
-        
-        if(!match) {
-            console.warn("FrontMatter Not Found.");
-            return result;
-        }
-        
-        const frontMatter = match[1];
-        result.body = match[2];
-
-        const lines = frontMatter.split(/\r?\n/);
+        const m = raw.match(/^---\s*([\s\S]*?)\s*---\s*/);
+        if(!m) return result;
+        const lines = m[1].split('\n');
         lines.forEach(line => {
-            const colonIdx = line.indexOf(':');
-            if (colonIdx === -1) return;
-            const key = line.slice(0, colonIdx).trim();
-            let val = line.slice(colonIdx + 1).trim();
-            if (/^['"].*['"]$/.test(val)) val = val.slice(1, -1);
-            if (key === 'tags' || key === 'categories') {
-                result.meta[key] = val.split(',').map(s => s.trim());
-            } else {
-                result.meta[key] = val;
-            }
+            const split = line.indexOf(':');
+            if(split > 0) result.meta[line.slice(0,split).trim()] = line.slice(split+1).trim();
         });
+        result.body = raw.slice(m[0].length);
         return result;
     }
 
     async function loadPost(){
         const filename = getQueryParam('id');
-        if(!filename) { window.location.href = 'index.html'; return; }
-        
+        if(!filename) return;
         try {
-            const timestamp = new Date().getTime();
-            const url = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/main/${POSTS_FOLDER}/${filename}.md?t=${timestamp}`;
-            console.log("Fetching:", url);
-
+            const url = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/main/${POSTS_FOLDER}/${filename}.md`;
             const res = await fetch(url);
-            if(!res.ok) {
-                if(res.status === 404) throw new Error("404 Not Found (Check Repo Public/Name)");
-                throw new Error(`Error: ${res.status}`);
-            }
-            
-            const rawText = await res.text();
-            const data = parseFrontMatter(rawText);
+            if(!res.ok) throw new Error('Post not found');
+            const text = await res.text();
+            const data = parseFrontMatter(text);
 
-            document.title = (data.meta.title || 'Log') + ' | HDIPERS';
+            document.title = data.meta.title || 'Note';
             document.getElementById('post-title').innerHTML = `
-                <span class="content-en block">${data.meta.title_en || data.meta.title || 'Untitled'}</span>
-                <span class="content-zh hidden font-cn block mt-2 text-2xl md:text-4xl opacity-90">${data.meta.title_zh || ''}</span>
+                <span class="content-en">${data.meta.title_en || data.meta.title}</span>
+                <span class="content-zh hidden font-cn">${data.meta.title_zh || data.meta.title}</span>
             `;
-            document.getElementById('post-date').textContent = data.meta.date || '';
+            document.getElementById('post-date').textContent = data.meta.date;
 
-            if(data.meta.tags) {
-                const tagContainer = document.getElementById('post-tags');
-                const tagArray = Array.isArray(data.meta.tags) ? data.meta.tags : (data.meta.tags ? [data.meta.tags] : []);
-                tagContainer.innerHTML = tagArray.map(t => `<span class="border border-neutral-700 px-1 rounded">#${t}</span>`).join(' ');
-            }
-
-            const renderer = {
-                image(href, title, text) {
-                    if (!href) return text;
-                    const safeHref = String(href);
-                    if (!safeHref.startsWith('http') && !safeHref.startsWith('//')) {
-                        const rawUrl = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/main/${safeHref}`;
-                        return `<img src="${rawUrl}" alt="${text}" title="${title || ''}" />`;
-                    }
-                    return `<img src="${safeHref}" alt="${text}" title="${title || ''}" />`;
-                },
-                link(href, title, text) {
-                    if (!href) return text;
-                    return `<a href="${href}" title="${title || ''}">${text}</a>`;
-                },
-                code(code, infostring) {
-                    const lang = (infostring || '').match(/\S*/)[0];
-                    if (lang === 'mermaid') {
-                        // Just wrap it, don't process it here. Let the main script handle it.
-                        return `<div class="mermaid">${code}</div>`;
-                    }
-                    const validLang = (window.Prism && Prism.languages[lang]) ? lang : 'plaintext';
-                    const highlightedCode = (window.Prism) ? Prism.highlight(code, Prism.languages[validLang], validLang) : code;
-                    return `<pre class="language-${validLang}"><code class="language-${validLang}">${highlightedCode}</code></pre>`;
+            const renderer = new marked.Renderer();
+            renderer.code = function(code, language) {
+                if (language === 'mermaid') {
+                    // 这里我们只生成 div，不尝试立即渲染
+                    return `<div class="mermaid">${code}</div>`;
                 }
+                return `<pre><code class="language-${language}">${code}</code></pre>`;
             };
 
-            marked.use({ renderer });
-
-            const rawHTML = marked.parse(data.body);
+            const rawHTML = marked.parse(data.body, { renderer: renderer });
             
             let processedHTML = rawHTML
                 .replace(/\[EN\]([\s\S]*?)\[END\]/g, '<div class="content-en">$1</div>')
@@ -201,18 +147,15 @@
 
             document.getElementById('post-body').innerHTML = processedHTML;
             
-            updateLang(); // Initial language setup
+            updateLang();
             if(window.Prism) Prism.highlightAll();
-            if(window.runMermaid) window.runMermaid(); // Initial mermaid run
+            
+            // 初始加载：渲染当前可见的图表 (英文版)
+            if(window.runMermaid) window.runMermaid();
 
         } catch(e) {
             console.error(e);
-            document.getElementById('post-body').innerHTML = `
-                <div class="border border-red-900 bg-red-900/20 p-8 rounded text-center">
-                    <h3 class="text-red-500 font-bold text-xl mb-2">SYSTEM ERROR</h3>
-                    <p class="font-mono text-sm text-red-300 mb-4">${e.message}</p>
-                    <a href="index.html" class="inline-block mt-6 border border-neutral-600 px-4 py-2 rounded hover:bg-neutral-800 transition text-sm">RETURN TO INDEX</a>
-                </div>`;
+            document.getElementById('post-body').innerHTML = "Error loading post. " + e.message;
         }
     }
     loadPost();
