@@ -15,28 +15,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
     
-    <!-- 🔥 核心修复区域 1：头部 Mermaid 配置 🔥 -->
+    <!-- 还原为最基础的 Mermaid 配置，不搞复杂的骚操作，稳字当头 -->
     <script type="module">
         import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
         mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose' });
-        
-        // 定义全局运行函数
         window.runMermaid = async () => { 
-            // 延时 100ms 确保 display:none 已经移除，元素有了宽度
-            setTimeout(async () => {
-                // 1. 暴力清除所有 .mermaid 元素的 data-processed 标记
-                // 这一步至关重要，它告诉 Mermaid："这些图还没画过，请重新画！"
-                const allMermaidDivs = document.querySelectorAll('.mermaid');
-                allMermaidDivs.forEach(el => el.removeAttribute('data-processed'));
-
-                // 2. 重新扫描并渲染页面上所有的 .mermaid 容器
-                if (allMermaidDivs.length > 0) {
-                    await mermaid.run({ 
-                        querySelector: '.mermaid',
-                        suppressErrors: true 
-                    });
-                }
-            }, 100);
+            await mermaid.run({ querySelector: '.mermaid' });
         };
     </script>
     
@@ -100,20 +84,28 @@
     const POSTS_FOLDER = 'posts';
 
     const toggleBtn = document.getElementById('langToggle');
-    let isEnglish = true;
+    
+    // 🔥 修改点 1：从 localStorage 获取之前的语言设置
+    // 如果没有存过，默认是 true (English)
+    const storedLang = localStorage.getItem('hdipers_lang');
+    let isEnglish = storedLang === null ? true : (storedLang === 'en');
 
-    // 🔥 核心修复区域 2：语言切换逻辑 🔥
     function updateLang() {
         document.querySelectorAll('.content-en').forEach(el => el.classList.toggle('hidden', !isEnglish));
         document.querySelectorAll('.content-zh').forEach(el => el.classList.toggle('hidden', isEnglish));
         toggleBtn.textContent = isEnglish ? 'SWITCH TO 中文' : 'SWITCH TO ENGLISH';
         
-        // 每次切换语言，都触发一次强制重绘
-        if (window.runMermaid) {
-            window.runMermaid();
-        }
+        // 存入缓存
+        localStorage.setItem('hdipers_lang', isEnglish ? 'en' : 'zh');
     }
-    toggleBtn.addEventListener('click', ()=>{ isEnglish = !isEnglish; updateLang(); });
+
+    toggleBtn.addEventListener('click', () => { 
+        isEnglish = !isEnglish; 
+        updateLang(); 
+        // 🔥 修改点 2：点击切换后，尝试简单的重绘
+        // 如果图没出来，用户现在可以手动刷新页面，因为状态已经记住了，刷新后就是中文
+        if(window.runMermaid) window.runMermaid();
+    });
 
     function getQueryParam(name) { return new URLSearchParams(window.location.search).get(name); }
 
@@ -121,15 +113,9 @@
         raw = raw.trim();
         const result = {meta:{}, body: raw};
         const match = raw.match(/^-{3,}\s*([\s\S]+?)\s*-{3,}\s*([\s\S]*)$/);
-        
-        if(!match) {
-            console.warn("FrontMatter Not Found.");
-            return result;
-        }
-        
+        if(!match) { console.warn("FrontMatter Not Found."); return result; }
         const frontMatter = match[1];
         result.body = match[2];
-
         const lines = frontMatter.split(/\r?\n/);
         lines.forEach(line => {
             const colonIdx = line.indexOf(':');
@@ -153,13 +139,9 @@
         try {
             const timestamp = new Date().getTime();
             const url = `https://raw.githubusercontent.com/${GITHUB_USERNAME}/${GITHUB_REPO}/main/${POSTS_FOLDER}/${filename}.md?t=${timestamp}`;
-            console.log("Fetching:", url);
 
             const res = await fetch(url);
-            if(!res.ok) {
-                if(res.status === 404) throw new Error("404 Not Found (Check Repo Public/Name)");
-                throw new Error(`Error: ${res.status}`);
-            }
+            if(!res.ok) throw new Error(`Error: ${res.status}`);
             
             const rawText = await res.text();
             const data = parseFrontMatter(rawText);
@@ -187,16 +169,10 @@
                     }
                     return `<img src="${safeHref}" alt="${text}" title="${title || ''}" />`;
                 },
-                link(href, title, text) {
-                    if (!href) return text;
-                    return `<a href="${href}" title="${title || ''}">${text}</a>`;
-                },
+                link(href, title, text) { if (!href) return text; return `<a href="${href}" title="${title || ''}">${text}</a>`; },
                 code(code, infostring) {
                     const lang = (infostring || '').match(/\S*/)[0];
-                    if (lang === 'mermaid') {
-                        // 只生成容器，等待后续 JS 处理
-                        return `<div class="mermaid">${code}</div>`;
-                    }
+                    if (lang === 'mermaid') { return `<div class="mermaid">${code}</div>`; }
                     const validLang = (window.Prism && Prism.languages[lang]) ? lang : 'plaintext';
                     const highlightedCode = (window.Prism) ? Prism.highlight(code, Prism.languages[validLang], validLang) : code;
                     return `<pre class="language-${validLang}"><code class="language-${validLang}">${highlightedCode}</code></pre>`;
@@ -204,7 +180,6 @@
             };
 
             marked.use({ renderer });
-
             const rawHTML = marked.parse(data.body);
             
             let processedHTML = rawHTML
@@ -213,19 +188,16 @@
 
             document.getElementById('post-body').innerHTML = processedHTML;
             
+            // 🔥 修改点 3：先根据记忆设置语言，再渲染图表
+            // 这样如果是中文环境，图表div一开始就是可见的，Mermaid就能正常渲染
             updateLang(); 
+            
             if(window.Prism) Prism.highlightAll();
-            // 初始加载也运行一次
             if(window.runMermaid) window.runMermaid();
 
         } catch(e) {
             console.error(e);
-            document.getElementById('post-body').innerHTML = `
-                <div class="border border-red-900 bg-red-900/20 p-8 rounded text-center">
-                    <h3 class="text-red-500 font-bold text-xl mb-2">SYSTEM ERROR</h3>
-                    <p class="font-mono text-sm text-red-300 mb-4">${e.message}</p>
-                    <a href="index.html" class="inline-block mt-6 border border-neutral-600 px-4 py-2 rounded hover:bg-neutral-800 transition text-sm">RETURN TO INDEX</a>
-                </div>`;
+            document.getElementById('post-body').innerHTML = `<p class="text-red-500">ERROR: ${e.message}</p>`;
         }
     }
     loadPost();
