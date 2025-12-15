@@ -221,7 +221,7 @@ CREATE TABLE TableName (
 | `+` | 1 or more chars | <br>`.+` (Something) |
 | `\d` | Any digit | <br>`\d` |
 | `\d{4,}` | 4 or more digits | <br>`\d{4,}` |
-| `(A ｜B)` | A or B |<br>`A｜B` |
+| `(A｜B)` | A or B |<br>`A｜B` |
 
 ---
 
