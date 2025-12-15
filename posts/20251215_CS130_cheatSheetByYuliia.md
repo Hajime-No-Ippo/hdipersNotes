@@ -26,25 +26,25 @@ summary_zh: 包含常见错误、正则表达式、关系代数和事务块等�
 # 1. SELECT Statements
 
 ### Basic & Filtering
-***Basic:** `SELECT column1, column2 FROM TableName;` 
-***Distinct:** `SELECT DISTINCT column FROM TableName;` 
-***Where:** `WHERE column > 100` 
-***Between:** `WHERE column BETWEEN 10 AND 50` 
-***In List:** `WHERE column IN ('val1', 'val2')` 
-***Nulls:** `WHERE column IS NULL` or `IS NOT NULL`  
+* **Basic:** `SELECT column1, column2 FROM TableName;` 
+* **Distinct:** `SELECT DISTINCT column FROM TableName;` 
+* **Where:** `WHERE column > 100` 
+* **Between:** `WHERE column BETWEEN 10 AND 50` 
+* **In List:** `WHERE column IN ('val1', 'val2')` 
+* **Nulls:** `WHERE column IS NULL` or `IS NOT NULL`  
 
 ### Multiple Conditions
-*`WHERE (condition1) AND (condition2);`  
-*`WHERE (condition1) OR (condition2);`  
+* `WHERE (condition1) AND (condition2);`  
+* `WHERE (condition1) OR (condition2);`  
 
 ### Pattern Matching
-***LIKE:** `'pattern%'` (starts with) or `'%pattern%'` (contains)  
-***Regex:** `~* '^pattern.*$'`  
+* **LIKE:** `'pattern%'` (starts with) or `'%pattern%'` (contains)  
+* **Regex:** `~* '^pattern.*$'`  
 
 ### Ordering
-*`ORDER BY column ASC;` (Ascending)  
-*`ORDER BY column DESC;` (Descending)  
-*`LIMIT 10;`  
+* `ORDER BY column ASC;` (Ascending)  
+* `ORDER BY column DESC;` (Descending)  
+* `LIMIT 10;`  
 
 ---
 
