@@ -297,7 +297,8 @@ CREATE TABLE TableName (
 
 ---
 
-# 1. SELECT 语句 (查询)###基础与筛选
+# 1. SELECT 语句 (查询)
+### 基础与筛选
 * **基础:** `SELECT column1, column2 FROM TableName;` 
 
 
@@ -317,7 +318,7 @@ CREATE TABLE TableName (
 
 
 
-###多重条件
+### 多重条件
 * `WHERE (条件1) AND (条件2);` 
 
 
@@ -325,7 +326,7 @@ CREATE TABLE TableName (
 
 
 
-###模式匹配
+### 模式匹配
 * **LIKE:** `'pattern%'` (以...开头) 或 `'%pattern%'` (包含) 
 
 
@@ -333,7 +334,7 @@ CREATE TABLE TableName (
 
 
 
-###排序
+### 排序
 * `ORDER BY column ASC;` (升序) 
 
 
@@ -347,7 +348,7 @@ CREATE TABLE TableName (
 ---
 
 # 2. UPDATE 语句 (更新)
-###语法
+### 语法
 ```sql
 UPDATE TableName SET col1 = 'val1', col2 = 'val2' WHERE condition;
 
