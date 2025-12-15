@@ -181,21 +181,24 @@ CREATE TABLE TableName (
 
 ---
 
-# 8. ALTER TABLE* 
+# 8. ALTER TABLE
+* 
 **Add Column:** `ALTER TABLE TableName ADD COLUMN columnname DATATYPE;` 
 
 
 
 ---
 
-# 9. INSERT Statements* 
+# 9. INSERT Statements
+* 
 **Syntax:** `INSERT INTO TableName (col1, col2) VALUES ('val1', 'val2');` 
 
 
 
 ---
 
-# 10. Transaction Blocks* 
+# 10. Transaction Blocks
+* 
 **Start:** `BEGIN;` 
 
 
@@ -217,51 +220,25 @@ CREATE TABLE TableName (
 # 11. Operators Reference
 | Operator | Meaning | Example |
 | --- | --- | --- |
-| `=` | Equals | <br>`WHERE col = 'value'` 
-
- |
-| `<>` or `!=` | Not equals | <br>`WHERE col <> 'value'` 
-
- |
-| `BETWEEN` | Range (inclusive!) | <br>`WHERE price BETWEEN 10 AND 50` 
-
- |
-| `IN` | In list | <br>`WHERE col IN ('A', 'B')` 
-
- |
-| `IS NULL` | Is null | <br>`WHERE col IS NULL` 
-
- |
-| `LIKE` | Pattern match | <br>`WHERE col LIKE '%text%'` 
-
- |
-| `~*` | Regex (case-insensitive) | <br>`WHERE col ~* 'pattern'` 
-
- |
+| `=` | Equals | <br>`WHERE col = 'value'` |
+| `<>` or `!=` | Not equals | <br>`WHERE col <> 'value'` |
+| `BETWEEN` | Range (inclusive!) | <br>`WHERE price BETWEEN 10 AND 50` |
+| `IN` | In list | <br>`WHERE col IN ('A', 'B')` |
+| `IS NULL` | Is null | <br>`WHERE col IS NULL` |
+| `LIKE` | Pattern match | <br>`WHERE col LIKE '%text%'` |
+| `~*` | Regex (case-insensitive) | <br>`WHERE col ~* 'pattern'` |
 
 ---
 
 # 12. Regex Patterns (PostgreSQL)
 | Pattern | Meaning | Example |
 | --- | --- | --- |
-| `^` | Start of string | <br>`^A` (Starts with A) 
-
- |
-| `$` | End of string | <br>`Road$` (Ends with Road) 
-
- |
-| `*` | 0 or more chars | <br>`.*` (Anything) 
-
- |
-| `+` | 1 or more chars | <br>`.+` (Something) 
-
- |
-| `\d` | Any digit | <br>`\d` 
-
- |
-| `\d{4,}` | 4 or more digits | <br>`\d{4,}` 
-
- |
+| `^` | Start of string | <br>`^A` (Starts with A) |
+| `$` | End of string | <br>`Road$` (Ends with Road) |
+| `*` | 0 or more chars | <br>`.*` (Anything) |
+| `+` | 1 or more chars | <br>`.+` (Something) |
+| `\d` | Any digit | <br>`\d` |
+| `\d{4,}` | 4 or more digits | <br>`\d{4,}` |
 | `(A | B)` | A or B |
 
 ---
@@ -269,27 +246,13 @@ CREATE TABLE TableName (
 # 13. Relational Algebra| Symbol 
 | Name | SQL Equivalent |
 | --- | --- | --- |
-| **σ** (sigma) | Selection | <br>`WHERE` 
-
- |
-| **π** (pi) | Projection | <br>`SELECT columns` 
-
- |
-| **X** | Cartesian Product | <br>`FROM T1, T2` (no join condition) 
-
- |
-| **⨝** | Natural Join | <br>`WHERE T1.key = T2.key` 
-
- |
-| **U** | Union | <br>`UNION` 
-
- |
-| **^** | AND | <br>`AND` 
-
- |
-| **V** | OR | <br>`OR` 
-
- |
+| **σ** (sigma) | Selection | <br>`WHERE` |
+| **π** (pi) | Projection | <br>`SELECT columns` |
+| **X** | Cartesian Product | <br>`FROM T1, T2` (no join condition) |
+| **⨝** | Natural Join | <br>`WHERE T1.key = T2.key` |
+| **U** | Union | <br>`UNION` |
+| **^** | AND | <br>`AND` |
+| **V** | OR | <br>`OR` |
 
 ---
 
@@ -593,51 +556,25 @@ CREATE TABLE TableName (
 # 11. 运算符参考
 | 运算符 | 含义 | 例子 |
 | --- | --- | --- |
-| `=` | 等于 | <br>`WHERE col = 'value'` 
-
- |
-| `<>` or `!=` | 不等于 | <br>`WHERE col <> 'value'` 
-
- |
-| `BETWEEN` | 范围 (包含!) | <br>`WHERE price BETWEEN 10 AND 50` 
-
- |
-| `IN` | 在列表中 | <br>`WHERE col IN ('A', 'B')` 
-
- |
-| `IS NULL` | 为空 | <br>`WHERE col IS NULL` 
-
- |
-| `LIKE` | 模式匹配 | <br>`WHERE col LIKE '%text%'` 
-
- |
-| `~*` | 正则 (不区分大小写) | <br>`WHERE col ~* 'pattern'` 
-
- |
+| `=` | 等于 | <br>`WHERE col = 'value'` |
+| `<>` or `!=` | 不等于 | <br>`WHERE col <> 'value'` |
+| `BETWEEN` | 范围 (包含!) | <br>`WHERE price BETWEEN 10 AND 50` |
+| `IN` | 在列表中 | <br>`WHERE col IN ('A', 'B')` |
+| `IS NULL` | 为空 | <br>`WHERE col IS NULL` |
+| `LIKE` | 模式匹配 | <br>`WHERE col LIKE '%text%'` |
+| `~*` | 正则 (不区分大小写) | <br>`WHERE col ~* 'pattern'` |
 
 ---
 
 # 12. 正则表达式模式 (PostgreSQL)
 | 模式 | 含义 | 例子 |
 | --- | --- | --- |
-| `^` | 字符串开头 | <br>`^A` (以 A 开头) 
-
- |
-| `$` | 字符串结尾 | <br>`Road$` (以 Road 结尾) 
-
- |
-| `*` | 0 或更多字符 | <br>`.*` (任意) 
-
- |
-| `+` | 1 或更多字符 | <br>`.+` (至少一个) 
-
- |
-| `\d` | 任意数字 | <br>`\d` 
-
- |
-| `\d{4,}` | 4个或更多数字 | <br>`\d{4,}` 
-
- |
+| `^` | 字符串开头 | <br>`^A` (以 A 开头) |
+| `$` | 字符串结尾 | <br>`Road$` (以 Road 结尾) |
+| `*` | 0 或更多字符 | <br>`.*` (任意) |
+| `+` | 1 或更多字符 | <br>`.+` (至少一个) |
+| `\d` | 任意数字 | <br>`\d` |
+| `\d{4,}` | 4个或更多数字 | <br>`\d{4,}` |
 | `(A | B)` | A 或 B |
 
 ---
@@ -645,27 +582,13 @@ CREATE TABLE TableName (
 # 13. 关系代数 (Relational Algebra)
 | 符号 | 名称 | SQL 等价 |
 | --- | --- | --- |
-| **σ** (sigma) | 选择 | <br>`WHERE` 
-
- |
-| **π** (pi) | 投影 | <br>`SELECT columns` 
-
- |
-| **X** | 笛卡尔积 | <br>`FROM T1, T2` (无连接条件) 
-
- |
-| **⨝** | 自然连接 | <br>`WHERE T1.key = T2.key` 
-
- |
-| **U** | 并集 | <br>`UNION` 
-
- |
-| **^** | AND | <br>`AND` 
-
- |
-| **V** | OR | <br>`OR` 
-
- |
+| **σ** (sigma) | 选择 | <br>`WHERE` |
+| **π** (pi) | 投影 | <br>`SELECT columns` |
+| **X** | 笛卡尔积 | <br>`FROM T1, T2` (无连接条件) |
+| **⨝** | 自然连接 | <br>`WHERE T1.key = T2.key` |
+| **U** | 并集 | <br>`UNION` |
+| **^** | AND | <br>`AND` |
+| **V** | OR | <br>`OR` |
 
 ---
 
