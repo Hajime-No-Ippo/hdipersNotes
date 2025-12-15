@@ -58,7 +58,8 @@ UPDATE TableName SET col1 = 'val1', col2 = 'val2' WHERE condition;
 
 
 
-###Percentage Calculations* 
+###Percentage Calculations
+* 
 **Decrease by 8%:** `SET price = price * 0.92` 
 
 
@@ -69,7 +70,8 @@ UPDATE TableName SET col1 = 'val1', col2 = 'val2' WHERE condition;
 
 ---
 
-# 3. DELETE Statements* 
+# 3. DELETE Statements
+* 
 
 **Standard:** `DELETE FROM TableName WHERE condition;` 
 
@@ -113,7 +115,8 @@ WHERE filters;
 
 ---
 
-# 5. Aggregate Functions* 
+# 5. Aggregate Functions
+* 
 **Count Rows:** `SELECT COUNT(*) FROM TableName;` 
 
 
@@ -132,7 +135,8 @@ WHERE filters;
 
 ---
 
-# 6. CASCADE Effects (CRITICAL!)* 
+# 6. CASCADE Effects (CRITICAL!)
+* 
 **Rule:** When deleting/updating, count rows in **BOTH** main table **AND** related tables. 
 
 
@@ -155,7 +159,8 @@ SELECT COUNT(*) FROM RelatedTable ...;
 
 ---
 
-# 7. CREATE TABLE```sql
+# 7. CREATE TABLE
+```sql
 CREATE TABLE TableName (
     col1 DATATYPE NOT NULL,
     CONSTRAINT TableName_PKEY PRIMARY KEY (col1)
@@ -209,7 +214,8 @@ CREATE TABLE TableName (
 
 ---
 
-# 11. Operators Reference| Operator | Meaning | Example |
+# 11. Operators Reference
+| Operator | Meaning | Example |
 | --- | --- | --- |
 | `=` | Equals | <br>`WHERE col = 'value'` 
 
@@ -235,7 +241,8 @@ CREATE TABLE TableName (
 
 ---
 
-# 12. Regex Patterns (PostgreSQL)| Pattern | Meaning | Example |
+# 12. Regex Patterns (PostgreSQL)
+| Pattern | Meaning | Example |
 | --- | --- | --- |
 | `^` | Start of string | <br>`^A` (Starts with A) 
 
@@ -259,7 +266,8 @@ CREATE TABLE TableName (
 
 ---
 
-# 13. Relational Algebra| Symbol | Name | SQL Equivalent |
+# 13. Relational Algebra| Symbol 
+| Name | SQL Equivalent |
 | --- | --- | --- |
 | **σ** (sigma) | Selection | <br>`WHERE` 
 
@@ -285,7 +293,8 @@ CREATE TABLE TableName (
 
 ---
 
-# 14. Tricky Queries - Common Mistakes1. 
+# 14. Tricky Queries - Common Mistakes
+1. 
 **Forgetting Join Conditions:** N tables need **N-1** joins. 
 
 
@@ -308,7 +317,8 @@ CREATE TABLE TableName (
 
 ---
 
-# 15. Pre-Submission Checklist* [ ] All tables listed in `FROM` clause? 
+# 15. Pre-Submission Checklist
+* [ ] All tables listed in `FROM` clause? 
 
 
 * [ ] All join conditions present (n-1)? 
@@ -334,7 +344,8 @@ CREATE TABLE TableName (
 
 [ZH]
 ![CS130_cheatSheet](images/20251215_CS130_cheatSheet.png)
-#📚 考试信息| 项目 | 详情 |
+#📚 考试信息
+| 项目 | 详情 |
 | --- | --- |
 | **时长** | 90 分钟 
 
@@ -351,7 +362,8 @@ CREATE TABLE TableName (
 
 ---
 
-# 1. SELECT 语句 (查询)###基础与筛选* 
+# 1. SELECT 语句 (查询)###基础与筛选
+* 
 **基础:** `SELECT column1, column2 FROM TableName;` 
 
 
@@ -376,7 +388,8 @@ CREATE TABLE TableName (
 
 
 
-###多重条件* 
+###多重条件
+* 
 `WHERE (条件1) AND (条件2);` 
 
 
@@ -385,7 +398,8 @@ CREATE TABLE TableName (
 
 
 
-###模式匹配* 
+###模式匹配
+* 
 **LIKE:** `'pattern%'` (以...开头) 或 `'%pattern%'` (包含) 
 
 
@@ -394,7 +408,8 @@ CREATE TABLE TableName (
 
 
 
-###排序* 
+###排序
+* 
 `ORDER BY column ASC;` (升序) 
 
 
@@ -409,14 +424,16 @@ CREATE TABLE TableName (
 
 ---
 
-# 2. UPDATE 语句 (更新)###语法```sql
+# 2. UPDATE 语句 (更新)###语法
+```sql
 UPDATE TableName SET col1 = 'val1', col2 = 'val2' WHERE condition;
 
 ```
 
 
 
-###百分比计算* 
+###百分比计算
+* 
 **减少 8%:** `SET price = price * 0.92` 
 
 
@@ -427,7 +444,8 @@ UPDATE TableName SET col1 = 'val1', col2 = 'val2' WHERE condition;
 
 ---
 
-# 3. DELETE 语句 (删除)* 
+# 3. DELETE 语句 (删除)
+* 
 **标准:** `DELETE FROM TableName WHERE condition;` 
 
 
@@ -442,7 +460,8 @@ UPDATE TableName SET col1 = 'val1', col2 = 'val2' WHERE condition;
 
 ---
 
-# 4. JOIN Queries (连接查询)###方法 1: 逗号 + WHERE (实验室常用)```sql
+# 4. JOIN Queries (连接查询)###方法 1: 逗号 + WHERE (实验室常用)
+```sql
 SELECT T1.col, T2.col
 FROM Table1 AS T1, Table2 AS T2
 WHERE (T1.key = T2.key) AND (过滤条件);
@@ -451,7 +470,8 @@ WHERE (T1.key = T2.key) AND (过滤条件);
 
 
 
-###方法 2: JOIN ... ON```sql
+###方法 2: JOIN ... ON
+```sql
 SELECT T1.col, T2.col
 FROM Table1 AS T1
 JOIN Table2 AS T2 ON T1.key = T2.key
@@ -468,7 +488,8 @@ WHERE 过滤条件;
 
 ---
 
-# 5. 聚合函数* 
+# 5. 聚合函数
+* 
 **计数:** `SELECT COUNT(*) FROM TableName;` 
 
 
@@ -487,7 +508,8 @@ WHERE 过滤条件;
 
 ---
 
-# 6. 级联效应 (CASCADE) - 关键！* 
+# 6. 级联效应 (CASCADE) - 关键！
+* 
 **规则:** 当删除/更新时，计算 **主表** 和 **关联表** 中的行数。 
 
 
@@ -510,7 +532,8 @@ SELECT COUNT(*) FROM RelatedTable ...;
 
 ---
 
-# 7. CREATE TABLE (建表)```sql
+# 7. CREATE TABLE (建表)
+```sql
 CREATE TABLE TableName (
     col1 DATATYPE NOT NULL,
     CONSTRAINT TableName_PKEY PRIMARY KEY (col1)
@@ -531,21 +554,24 @@ CREATE TABLE TableName (
 
 ---
 
-# 8. ALTER TABLE (修改表)* 
+# 8. ALTER TABLE (修改表)
+* 
 **添加列:** `ALTER TABLE TableName ADD COLUMN columnname DATATYPE;` 
 
 
 
 ---
 
-# 9. INSERT Statements (插入)* 
+# 9. INSERT Statements (插入)
+* 
 **语法:** `INSERT INTO TableName (col1, col2) VALUES ('val1', 'val2');` 
 
 
 
 ---
 
-# 10. 事务块 (Transaction Blocks)* 
+# 10. 事务块 (Transaction Blocks)
+* 
 **开始:** `BEGIN;` 
 
 
@@ -564,7 +590,8 @@ CREATE TABLE TableName (
 
 ---
 
-# 11. 运算符参考| 运算符 | 含义 | 例子 |
+# 11. 运算符参考
+| 运算符 | 含义 | 例子 |
 | --- | --- | --- |
 | `=` | 等于 | <br>`WHERE col = 'value'` 
 
@@ -590,7 +617,8 @@ CREATE TABLE TableName (
 
 ---
 
-# 12. 正则表达式模式 (PostgreSQL)| 模式 | 含义 | 例子 |
+# 12. 正则表达式模式 (PostgreSQL)
+| 模式 | 含义 | 例子 |
 | --- | --- | --- |
 | `^` | 字符串开头 | <br>`^A` (以 A 开头) 
 
@@ -614,7 +642,8 @@ CREATE TABLE TableName (
 
 ---
 
-# 13. 关系代数 (Relational Algebra)| 符号 | 名称 | SQL 等价 |
+# 13. 关系代数 (Relational Algebra)
+| 符号 | 名称 | SQL 等价 |
 | --- | --- | --- |
 | **σ** (sigma) | 选择 | <br>`WHERE` 
 
@@ -640,7 +669,8 @@ CREATE TABLE TableName (
 
 ---
 
-# 14. 棘手的查询 - 常见错误1. 
+# 14. 棘手的查询 - 常见错误
+1. 
 **忘记连接条件:** N 个表需要 **N-1** 个连接。 
 
 
@@ -667,7 +697,8 @@ CREATE TABLE TableName (
 
 ---
 
-# 15. 提交前检查清单* [ ] `FROM` 子句中列出了所有表吗？ 
+# 15. 提交前检查清单
+* [ ] `FROM` 子句中列出了所有表吗？ 
 
 
 * [ ] 所有的连接条件都存在吗 (n-1)？ 
@@ -686,7 +717,5 @@ CREATE TABLE TableName (
 
 
 * [ ] 计算 CASCADE 效应的总行数了吗？ 
-
-
 
 [END]
