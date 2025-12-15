@@ -287,7 +287,7 @@ CREATE TABLE TableName (
 
 [ZH]
 ![CS130_cheatSheet](images/20251215_CS130_cheatSheet.png)
-#📚 考试信息
+# 📚 考试信息
 | 项目 | 详情 |
 | --- | --- |
 | **时长** | 90 分钟  |
